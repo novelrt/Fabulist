@@ -3,19 +3,31 @@
 A terse, flexible language and runtime for creating and executing visual
 novels.
 
-## Project Synopsis ##
+## Contributing ##
+
+We're open to contributions from anyone and everyone. If you'd like to chat
+with us, feel free to contact us on [Discord].
+
+**NovelRT and everyone contributing (this includes issues, pull requests, the
+wiki, Discord in all forms, etc.) must abide by our code of conduct, which can
+be found [here][CodeOfConduct]. Instances of abuse, harrassment or
+otherwise unacceptable behaviour must either be reported to a NovelRT Developer
+via direct message on Discord or by contacting us via
+[email][CodeOfConductEmail].**
+
+### Project Synopsis ###
 
 This is a rough synopsis of the project structure as it stands today:
 
-### `cli` ###
+#### `cli` ####
 
 A small command-line utility for evaluating Fabulist scripts.
 
-### `docs` ###
+#### `docs` ####
 
 Project documentation, including this readme :)
 
-### `examples` ###
+#### `examples` ####
 
 A not-comprehensive list of examples of Fabulist syntax, used primarily for
 testing. As the language is fleshed out, there will be more examples added here.
@@ -25,13 +37,37 @@ testing. As the language is fleshed out, there will be more examples added here.
 Effectively scratch space, this directory is used for rapid development and
 prototyping of Fabulist syntax.
 
-### `src` ###
+#### `src` ####
 
 The implementation of the Fabulist runtime, in ABI-portable C++.
 
-### `thirdparty` ###
+#### `thirdparty` ####
 
 Third-party dependencies which are automatically retrieved by CMake.
+
+### Building ###
+
+Before building Fabulist, you need to install some dependencies, and ensure
+they can be located by CMake
+
+#### Dependencies ####
+1. Lua 5.1 (Version TBD) (Debian-derivatives: `liblua5.1-0-dev`)
+2. A C++ compiler supporting C++17 (Debian-derivates: `build-essential`)
+3. CMake 3.18 (Debian-derivatives: `cmake`)
+
+#### Instructions ####
+Compiling Fabulist should be fairly simple, using commands something like this:
+```
+mkdir build
+cd build
+cmake ..
+cmake --build . -j
+```
+
+### Code style ###
+
+There's no set code style yet, so for now just try to be consistent with the
+rest of the code.
 
 ## Why? ##
 
@@ -106,42 +142,6 @@ properties:
 4. Standalone: Twine's languages appear closely related to the Twine engine,
    which is purely web/JS-based. It does not look like it would be easy to
    separate the two.
-
-## Contributing ##
-
-We're open to contributions from anyone and everyone. If you'd like to chat
-with us, feel free to contact us on [Discord].
-
-**NovelRT and everyone contributing (this includes issues, pull requests, the
-wiki, Discord in all forms, etc.) must abide by our code of conduct, which can
-be found [here][CodeOfConduct]. Instances of abuse, harrassment or
-otherwise unacceptable behaviour must either be reported to a NovelRT Developer
-via direct message on Discord or by contacting us via
-[email][CodeOfConductEmail].**
-
-### Building ###
-
-Before building Fabulist, you need to install some dependencies, and ensure
-they can be located by CMake
-
-#### Dependencies ####
-1. Lua 5.1 (Version TBD) (Debian-derivatives: `liblua5.1-0-dev`)
-2. A C++ compiler supporting C++17 (Debian-derivates: `build-essential`)
-3. CMake 3.18 (Debian-derivatives: `cmake`)
-
-#### Instructions ####
-Compiling Fabulist should be fairly simple, using commands something like this:
-```
-mkdir build
-cd build
-cmake ..
-cmake --build . -j
-```
-
-### Code style ###
-
-There's no set code style yet, so for now just try to be consistent with the
-rest of the code.
 
 ## License ##
 
