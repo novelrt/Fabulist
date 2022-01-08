@@ -1,0 +1,29 @@
+# Third-party dependencies
+thirdparty/*
+!thirdparty/patches/*
+
+# Build artifacts
+build/
+
+# IDE files
+.idea
+*.kdev4
+*.kate-swp
+
+.cache/
+.idea/
+.kdev4/
+.vs/
+.vscode/
+
+# CMake
+CMakeLists.txt.user
+CMakeCache.txt
+CMakeFiles
+CMakeScripts
+Testing
+Makefile
+cmake_install
+install_manifest.txt
+compile_commands
+CTestTestfile.cmake
