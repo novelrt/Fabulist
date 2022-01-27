@@ -67,12 +67,10 @@ add_library(lua::lua ALIAS lua)
 set_target_properties(lua
     PROPERTIES
         OUTPUT_NAME fabulist-lua
-        PUBLIC_HEADER "${header_files}"
 )
 target_include_directories(lua
     PUBLIC
         $<BUILD_INTERFACE:${lua_SOURCE_DIR}/src>
-        $<INSTALL_INTERFACE:include/fabulist/lua>
 )
 
 target_compile_options(lua
@@ -87,5 +85,4 @@ install(
     TARGETS lua
     EXPORT fabulist
     LIBRARY DESTINATION lib
-    PUBLIC_HEADER DESTINATION include/fabulist/lua
 )
