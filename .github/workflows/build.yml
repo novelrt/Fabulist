@@ -1,0 +1,28 @@
+name: Build Fabulist
+
+on:
+  push:
+    branches:
+    - 'main'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Generate build system
+      run: cmake -DCMAKE_BUILD_TYPE="MinSizeRel" -DCMAKE_INSTALL_PREFIX=inst -S . -B build
+
+    - name: Build Fabulist
+      run: cmake --build build --parallel
+
+    - name: Generate artifact
+      run: cmake --install build --config MinSizeRel
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: fabulist
+        path: inst
