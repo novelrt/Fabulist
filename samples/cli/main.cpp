@@ -17,9 +17,9 @@ std::ostream& usage(std::ostream& stream)
         << "  FILE                     Fabulist file to execute.\n"
         << "\n"
         << "Options:\n"
-        << "  -s, --section[=section]  Section to begin execution at\n"
-        << "                           (default: root)\n"
-        << "  -h, --help               Display this help and exit\n";
+        << "  -h, --help               Display this help and exit\n"
+        << "  -s, --section[=SECTION]  Section to begin execution at\n"
+        << "                           (default: root)\n";
 }
 
 static struct option options[] = {
@@ -35,7 +35,7 @@ bool parseargs(int argc, char** argv,
     int longopt_ind = 0;
     while (true)
     {
-        int c = getopt_long(argc, argv, "s:h", options, &longopt_ind);
+        int c = getopt_long(argc, argv, "s::h", options, &longopt_ind);
         if (c == -1) break;
 
         switch (c)

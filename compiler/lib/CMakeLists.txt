@@ -1,13 +1,15 @@
 include(GenerateExportHeader)
 
 add_library(compiler
-    main.cpp
+    compiler.cpp
 )
 
-set(public_headers)
+set(public_headers
+    include/fabulist/compiler/compiler.hpp
+)
 
 generate_export_header(compiler
-    PREFIX_NAME FABULIST_COMPILER_
+    PREFIX_NAME FABULIST_
     EXPORT_FILE_NAME fabulist_compiler_export.hpp
 )
 
@@ -25,7 +27,7 @@ target_compile_features(compiler
 target_include_directories(compiler
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:include>
     PRIVATE
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/private>
