@@ -1,8 +1,5 @@
 include(GenerateExportHeader)
 
-# TODO: decide whether we want 5.2 or not
-find_package(Lua 5.1 EXACT REQUIRED)
-
 add_library(runtime
     speaker.cpp
     story.cpp
@@ -26,10 +23,12 @@ set_target_properties(runtime
         OUTPUT_NAME fabulist-runtime
         PUBLIC_HEADER "${public_headers};${CMAKE_CURRENT_BINARY_DIR}/fabulist_export.hpp"
 )
+
 target_compile_features(runtime
     PUBLIC
         cxx_std_17
 )
+
 target_include_directories(runtime
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
@@ -37,12 +36,11 @@ target_include_directories(runtime
         $<INSTALL_INTERFACE:include>
     PRIVATE
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include_private>
-        ${LUA_INCLUDE_DIR}
 )
+
 target_link_libraries(runtime
     PRIVATE
         sol2
-        ${LUA_LIBRARIES}
 )
 
 install(
@@ -50,9 +48,4 @@ install(
     EXPORT fabulist
     LIBRARY DESTINATION lib
     PUBLIC_HEADER DESTINATION include/fabulist
-)
-install(
-    EXPORT fabulist
-    NAMESPACE fabulist::
-    DESTINATION lib
 )

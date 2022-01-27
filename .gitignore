@@ -1,7 +1,3 @@
-# Third-party dependencies
-thirdparty/*
-!thirdparty/patches/*
-
 # Build artifacts
 build/
 

@@ -34,7 +34,26 @@ local function speaker(speakerName)
     return speech
 end
 
-local fenv = { section = section, options = options, jump = jump, speaker = speaker }
+local base64 = require("base64")
+local function execute(fn)
+    assert(type(fn) == "function", "expected function")
+
+    local bitcode = base64.encode(string.dump(fn))
+    local variables = { }
+    for i = 1, math.huge do
+        local name, value = debug.getupvalue(fn, i)
+        if not name then break end
+
+        assert(type(value) ~= "function",
+            ("cannot serialize upvalue %s as it is a function"):format(name))
+
+        variables[i] = value
+    end
+
+    currentSection[#currentSection + 1] = { type = "command", bitcode = bitcode, upvalues = variables }
+end
+
+local fenv = { section = section, options = options, jump = jump, speaker = speaker, execute = execute }
 setmetatable(fenv, { __index = speakers })
 setfenv(
     assert(
