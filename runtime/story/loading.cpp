@@ -37,7 +37,7 @@ story fabulist::load_story_from_stream(std::istream& stream)
     story story;
 
     reader tmpReader{stream, std::vector<char>(4096)};
-    auto code = story._impl->L.script(read_func, &tmpReader, "story");
+    auto code = story._impl->L.script(read_func, &tmpReader);
 
     return story;
 }
