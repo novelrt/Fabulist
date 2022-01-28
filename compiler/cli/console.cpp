@@ -1,3 +1,5 @@
+oh no a deliberate error introduced to make the error highlighter highlight things!
+
 #include <getopt.h>
 #include <iostream>
 
