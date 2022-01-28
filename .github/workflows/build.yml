@@ -7,19 +7,23 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ windows-latest, ubuntu-latest ]
+        configuration: [ RelWithDebInfo, MinSizeRel ]
 
     steps:
     - uses: actions/checkout@v2
 
     - name: Generate build system
-      run: cmake -DCMAKE_BUILD_TYPE="MinSizeRel" -DCMAKE_INSTALL_PREFIX=inst -S . -B build
+      run: cmake -DCMAKE_BUILD_TYPE="${{ matrix.configuration }}" -DCMAKE_INSTALL_PREFIX=inst -S . -B build
 
     - name: Build Fabulist
-      run: cmake --build build --parallel
+      run: cmake --build build --parallel --config ${{ matrix.configuration }}
 
     - name: Generate artifact
-      run: cmake --install build --config MinSizeRel
+      run: cmake --install build --config ${{ matrix.configuration }}
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v2
