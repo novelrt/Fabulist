@@ -1,9 +1,6 @@
-name: Build Fabulist
+name: Pull Request validation
 
-on:
-  push:
-    branches:
-    - 'main'
+on: pull_request
 
 jobs:
   build:
@@ -11,7 +8,6 @@ jobs:
     strategy:
       matrix:
         os: [ windows-latest, ubuntu-latest ]
-        configuration: [ RelWithDebInfo, MinSizeRel ]
 
     steps:
     - uses: actions/checkout@v2
@@ -22,7 +18,6 @@ jobs:
       shell: bash
       run: |
         cmake \
-          -DCMAKE_BUILD_TYPE="${{ matrix.configuration }}" \
           -DCMAKE_INSTALL_PREFIX=inst \
           -DFABULIST_THIRDPARTY=ON \
             -DFABULIST_THIRDPARTY_LUA=ON \
@@ -35,13 +30,13 @@ jobs:
           -Wdev -Wdeprecated -Werror=dev -Werror=deprecated -S . -B build
 
     - name: Build Fabulist
-      run: cmake --build build --parallel --config ${{ matrix.configuration }} --verbose
+      run: cmake --build build --parallel --verbose
 
     - name: Generate artifact
-      run: cmake --install build --config ${{ matrix.configuration }} --verbose
+      run: cmake --install build --verbose
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v2
       with:
-        name: fabulist-${{ matrix.os }}-${{ matrix.configuration }}
+        name: fabulist-pr-${{ matrix.os }}
         path: inst
