@@ -20,7 +20,19 @@ jobs:
     - uses: novelrt/setup-cpp@v1
 
     - name: Generate build system
-      run: cmake -DCMAKE_BUILD_TYPE="${{ matrix.configuration }}" -DCMAKE_INSTALL_PREFIX=inst -Wdev -Wdeprecated -Werror=dev -Werror=deprecated -S . -B build
+      run: |
+        cmake \
+          -DCMAKE_BUILD_TYPE="${{ matrix.configuration }}" \
+          -DCMAKE_INSTALL_PREFIX=inst \
+          -DFABULIST_THIRDPARTY=ON \
+            -DFABULIST_THIRDPARTY_LUA=ON \
+            -DFABULIST_THIRDPARTY_SOL=ON \
+          -DFABULIST_COMPILER=ON \
+            -DFABULIST_COMPILER_CLI=ON \
+          -DFABULIST_RUNTIME=ON \
+          -DFABULST_SAMPLES=ON \
+            -DFABULIST_SAMPLE_CLI=ON \
+          -Wdev -Wdeprecated -Werror=dev -Werror=deprecated -S . -B build
 
     - name: Build Fabulist
       run: cmake --build build --parallel --config ${{ matrix.configuration }} --verbose
