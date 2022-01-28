@@ -16,6 +16,8 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - uses: novelrt/setup-cpp@v1
+
     - name: Generate build system
       run: cmake -DCMAKE_BUILD_TYPE="${{ matrix.configuration }}" -DCMAKE_INSTALL_PREFIX=inst -Wdev -Wdeprecated -Werror=dev -Werror=deprecated -S . -B build
 
