@@ -17,16 +17,16 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: Generate build system
-      run: cmake -DCMAKE_BUILD_TYPE="${{ matrix.configuration }}" -DCMAKE_INSTALL_PREFIX=inst -S . -B build
+      run: cmake -DCMAKE_BUILD_TYPE="${{ matrix.configuration }}" -DCMAKE_INSTALL_PREFIX=inst -Wdev -Wdeprecated -Werror=dev -Werror=deprecated -S . -B build
 
     - name: Build Fabulist
-      run: cmake --build build --parallel --config ${{ matrix.configuration }}
+      run: cmake --build build --parallel --config ${{ matrix.configuration }} --verbose
 
     - name: Generate artifact
-      run: cmake --install build --config ${{ matrix.configuration }}
+      run: cmake --install build --config ${{ matrix.configuration }} --verbose
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v2
       with:
-        name: fabulist
+        name: fabulist-${{ matrix.os }}-${{ matrix.configuration }}
         path: inst
