@@ -1,8 +1,5 @@
 include(GenerateExportHeader)
 
-if(NOT TARGET sol2::sol2)
-    find_package(sol2 REQUIRED)
-endif()
 if(NOT TARGET lua::lua)
     find_package(Lua 5.1 REQUIRED)
 endif()
