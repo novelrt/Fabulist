@@ -1,7 +1,24 @@
 include(GenerateExportHeader)
 
+if(NOT TARGET sol2::sol2)
+    find_package(sol2 REQUIRED)
+endif()
+if(NOT TARGET lua::lua)
+    find_package(Lua 5.1 REQUIRED)
+endif()
+
 add_library(compiler
-    compiler.cpp
+    compiler/convenience.cpp
+
+    compiler/parse.cpp
+    compiler/parse/build_error_message.cpp
+    compiler/parse/stack_trace.cpp
+
+    compiler/private.cpp
+    compiler/save.cpp
+    compiler/setup.cpp
+
+    section/setup.cpp
 )
 
 set(public_headers
@@ -29,13 +46,13 @@ target_include_directories(compiler
         $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:include>
-    PRIVATE
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/private>
 )
 
 target_link_libraries(compiler
     PRIVATE
-        sol2::sol2
+        nlohmann_json::nlohmann_json
+    PUBLIC
+        lua::lua
 )
 
 install(

@@ -8,7 +8,7 @@ using namespace fabulist::compiler;
 
 int main(int argc, char** argv)
 {
-    char const* output_location = "fabulist.json";
+    char const* output_location = "-";
     int file_idx;
     if (!cli::parseargs(argc, argv, &output_location, &file_idx))
     {
@@ -21,11 +21,29 @@ int main(int argc, char** argv)
     for (int i = file_idx; i < argc; i++)
     {
         std::filesystem::path path{argv[i]};
-        std::cerr << cli::error << "Parsing " << path << "\n";
-        compiler.parse(path);
+        std::cerr << cli::verbose << "Parsing " << path << "\n";
+        try
+        {
+            compiler.parse(path);
+        }
+        catch (std::exception& e)
+        {
+            std::cerr << e.what() << "\n";
+            std::cerr << cli::error << "compilation halted.\n";
+            return 1;
+        }
     }
 
-    compiler.save(output_location);
+    if (*output_location == '-')
+    {
+        compiler.save(std::cout);
+    }
+    else
+    {
+        std::filesystem::path output{output_location};
+        std::cerr << cli::verbose << "Saving to " << output << "\n";
+        compiler.save(output);
+    }
 
     return 0;
 }

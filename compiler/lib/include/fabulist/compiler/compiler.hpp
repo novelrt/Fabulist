@@ -3,6 +3,7 @@
 
 #include <filesystem>
 #include <istream>
+#include <memory>
 #include <ostream>
 
 #include "fabulist_compiler_export.hpp"
@@ -10,22 +11,32 @@
 namespace fabulist::compiler
 {
 
+namespace detail
+{
+
+class compiler;
+
+}
+
 class FABULIST_COMPILER_EXPORT compiler
 {
     public:
-        explicit compiler() = default;
-        ~compiler() noexcept = default;
+        explicit compiler();
+        ~compiler() noexcept;
 
         compiler(const compiler&) = delete;
         compiler& operator=(const compiler&) = delete;
-        compiler(compiler&&) = default;
-        compiler& operator=(compiler&&) = default;
+        compiler(compiler&&);
+        compiler& operator=(compiler&&);
 
         void parse(std::filesystem::path path);
         void parse(std::istream& stream);
+        void parse(std::istream& stream, std::string name);
 
         void save(std::filesystem::path path);
         void save(std::ostream& stream);
+    private:
+        std::unique_ptr<detail::compiler> _pimpl;
 };
 
 }

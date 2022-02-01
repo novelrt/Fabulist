@@ -67,6 +67,7 @@ add_library(lua::lua ALIAS lua)
 set_target_properties(lua
     PROPERTIES
         OUTPUT_NAME fabulist-lua
+        VERSION ${FABULIST_THIRDPARTY_LUA_VERSION}
 )
 target_include_directories(lua
     PUBLIC

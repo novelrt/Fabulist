@@ -7,7 +7,7 @@
 
 using namespace fabulist::detail;
 
-story_impl::story_impl(story* story)
+story_impl::story_impl(story*)
     : L{}, speakers{}
 {
     setup_environment(L);

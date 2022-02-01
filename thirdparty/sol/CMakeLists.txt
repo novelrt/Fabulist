@@ -36,25 +36,9 @@ if(NOT sol2_POPULATED)
     FetchContent_Populate(sol2)
 endif()
 
-add_library(sol2 INTERFACE)
-add_library(sol2::sol2 ALIAS sol2)
-set_target_properties(sol2 PROPERTIES
-    IMPORTED_LOCATION ""
-)
+add_library(sol2::sol2 INTERFACE IMPORTED GLOBAL)
 
-target_include_directories(sol2
+target_include_directories(sol2::sol2
     INTERFACE
         $<BUILD_INTERFACE:${sol2_SOURCE_DIR}/include>
-)
-
-target_link_libraries(sol2
-    INTERFACE
-        lua::lua
-)
-
-get_target_property(incl sol2 INTERFACE_INCLUDE_DIRECTORIES)
-
-install(
-    TARGETS sol2
-    EXPORT fabulist
 )

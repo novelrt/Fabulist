@@ -16,7 +16,7 @@ struct reader {
     std::vector<char> buffer;
 };
 
-const char* read_func(lua_State* L, void* data, size_t* size)
+const char* read_func(lua_State*, void* data, size_t* size)
 {
     auto* reader = static_cast<struct reader*>(data);
 
