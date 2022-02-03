@@ -3,11 +3,7 @@
 
 #include <vector>
 
-extern "C"
-{
-#include <lua.h>
-#include <lauxlib.h>
-}
+#include "../compatibility/lua.hpp"
 
 #include "fabulist_compiler_export.hpp"
 

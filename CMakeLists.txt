@@ -4,7 +4,7 @@ project(Fabulist
     VERSION 0.1.0
     DESCRIPTION "A simple, embeddable scripting language for visual novels"
     HOMEPAGE_URL "https://github.com/novelrt/fabulist"
-    LANGUAGES C CXX
+    LANGUAGES CXX
 )
 
 option(FABULIST_THIRDPARTY "Use vendored third-party dependencies" ON)
@@ -12,16 +12,15 @@ option(FABULIST_COMPILER "Build compiler" ON)
 option(FABULIST_RUNTIME "Build runtime" ON)
 option(FABULIST_SAMPLES "Build samples" OFF)
 
-if(FABULIST_THIRDPARTY)
-    add_subdirectory(thirdparty)
-endif()
+add_subdirectory(thirdparty)
 
 if(FABULIST_COMPILER)
     add_subdirectory(compiler)
 endif()
 
 if(FABULIST_RUNTIME)
-    add_subdirectory(runtime)
+    message(WARNING "Fabulist runtime is currently broken - refusing to build runtime")
+    # add_subdirectory(runtime)
 endif()
 
 if(FABULIST_SAMPLES)

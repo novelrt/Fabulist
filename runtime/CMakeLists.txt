@@ -1,12 +1,5 @@
 include(GenerateExportHeader)
 
-if(NOT TARGET sol2::sol2)
-    find_package(sol2 REQUIRED)
-endif()
-if(NOT TARGET lua::lua)
-    find_package(Lua 5.1 REQUIRED)
-endif()
-
 add_library(runtime
     speaker.cpp
     story.cpp
@@ -46,8 +39,6 @@ target_include_directories(runtime
 )
 
 target_link_libraries(runtime
-    PRIVATE
-        sol2::sol2
     PUBLIC
         lua::lua
 )

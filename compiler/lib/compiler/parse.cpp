@@ -64,7 +64,7 @@ void compiler::parse(std::istream& stream, std::string name)
 
     int status =
 #if LUA_VERSION_NUM == 501
-        lua_load(_pimpl->state, read_func, &reader, name.c_str());
+        lua_load(_pimpl->state, read_func, &reader, name.c_str(), "t");
 #endif
 
     if (status) error_handler(_pimpl->state);

@@ -2,24 +2,30 @@
 #include <fabulist/compiler/section.hpp>
 
 #include "compiler.hpp"
+#include "setup/common.hpp"
 
 using namespace fabulist::compiler;
 
-#define ACTIONS \
-    ACTION(jump) \
-    ACTION(options)
+static lua_CFunction state_setup_actions[] = {
+    &luaopen_compat,
+    &setup_state,
 
-enum class action
-{
-#define ACTION(name) name,
-ACTIONS
-#undef ACTION
+    &setup_speaker,
+    &setup_section,
+    &setup_options,
+
+    &setup_actions,
+
+    nullptr
 };
 
 compiler::compiler()
     : _pimpl{new detail::compiler{}}
 {
-
+    for (lua_CFunction* action = state_setup_actions; *action != nullptr; action++)
+    {
+        (*action)(_pimpl->state);
+    }
 }
 
 compiler::~compiler() noexcept = default;

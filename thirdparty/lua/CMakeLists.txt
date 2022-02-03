@@ -1,11 +1,11 @@
 include(CMakeDependentOption)
 include(FetchContent)
 
-set(FABULIST_THIRDPARTY_LUA_VERSION "5.1.5" CACHE STRING
+set(FABULIST_LUA_VERSION "5.1.5" CACHE STRING
     "Fabulist vendored Lua library version")
 
-if(NOT "${FABULIST_THIRDPARTY_LUA_VERSION}" STREQUAL "5.1.5")
-    message(WARNING "FABULIST_THIRDPARTY_LUA_VERSION is not currently respected")
+if(NOT "${FABULIST_LUA_VERSION}" STREQUAL "5.1.5")
+    message(WARNING "FABULIST_LUA_VERSION is not currently respected")
 endif()
 
 FetchContent_Declare(lua
@@ -62,6 +62,24 @@ list(REMOVE_DUPLICATES header_files)
 list(TRANSFORM source_files PREPEND "${lua_SOURCE_DIR}/src/")
 list(TRANSFORM header_files PREPEND "${lua_SOURCE_DIR}/src/")
 
+foreach(file IN LISTS source_files header_files)
+    set_property(
+        SOURCE "${file}"
+        PROPERTY LANGUAGE CXX
+    )
+
+    # This is necessary as CMake doesn't automatically pass this flag for
+    # whatever reason
+    set_property(
+        SOURCE "${file}"
+        PROPERTY COMPILE_OPTIONS
+            "$<$<CXX_COMPILER_ID:AppleClang>:--language=c++>"
+            "$<$<CXX_COMPILER_ID:Clang>:--language=c++>"
+            "$<$<CXX_COMPILER_ID:GNU>:--language=c++>"
+            "$<$<CXX_COMPILER_ID:MSVC>:/Tp>"
+    )
+endforeach()
+
 add_library(lua ${source_files})
 add_library(lua::lua ALIAS lua)
 set_target_properties(lua
@@ -76,10 +94,20 @@ target_include_directories(lua
 
 target_compile_options(lua
     PRIVATE
-        $<$<C_COMPILER_ID:AppleClang>:-Wno-empty-body>
-        $<$<C_COMPILER_ID:Clang>:-Wno-empty-body>
-        $<$<C_COMPILER_ID:GNU>:-Wno-empty-body>
-        $<$<C_COMPILER_ID:MSVC>:/wd4390> # empty control statement found
+        $<$<CXX_COMPILER_ID:AppleClang>:-Wno-empty-body>
+        $<$<CXX_COMPILER_ID:Clang>:-Wno-empty-body>
+        $<$<CXX_COMPILER_ID:GNU>:-Wno-empty-body>
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4390> # empty control statement found
+
+        $<$<CXX_COMPILER_ID:AppleClang>:-Wno-unused-const-variable>
+        $<$<CXX_COMPILER_ID:Clang>:-Wno-unused-const-variable>
+        $<$<CXX_COMPILER_ID:GNU>:-Wno-unused-const-variable>
+        # $<$<CXX_COMPILER_ID:MSVC>:/wd4390> # no msvc error for this?
+
+        $<$<CXX_COMPILER_ID:AppleClang>:-Wno-misleading-indentation>
+        $<$<CXX_COMPILER_ID:Clang>:-Wno-misleading-indentation>
+        $<$<CXX_COMPILER_ID:GNU>:-Wno-misleading-indentation>
+        # $<$<CXX_COMPILER_ID:MSVC>:/wd4390> # no msvc error for this?
 )
 
 install(

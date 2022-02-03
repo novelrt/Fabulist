@@ -1,10 +1,8 @@
 include(GenerateExportHeader)
 
-if(NOT TARGET lua::lua)
-    find_package(Lua 5.1 REQUIRED)
-endif()
-
 add_library(compiler
+    $<$<AND:$<VERSION_GREATER_EQUAL:${FABULIST_LUA_VERSION},5.1>,$<VERSION_LESS:${FABULIST_LUA_VERSION},5.2>>:compatibility/lua5.1.cpp>
+
     compiler/convenience.cpp
 
     compiler/parse.cpp
@@ -13,7 +11,13 @@ add_library(compiler
 
     compiler/private.cpp
     compiler/save.cpp
+
     compiler/setup.cpp
+    compiler/setup/actions.cpp
+    compiler/setup/base.cpp
+    compiler/setup/options.cpp
+    compiler/setup/section.cpp
+    compiler/setup/speaker.cpp
 
     section/setup.cpp
 )
