@@ -46,13 +46,13 @@ endif()
 file(READ "${lua_SOURCE_DIR}/src/Makefile" lua_makefile)
 
 # Parse out object files
-string(REGEX REPLACE ".+CORE_O=[\t ]+(.+)[\r\n ]+LIB_O=[\t ]+(.+)[\r\n ]+LUA_T=[\t ]+.+" "\\1;\\2" lua_objects "${lua_makefile}")
+string(REGEX REPLACE ".+CORE_O=[\t ]+(.+)[\r\n ]+LIB_O=[\t ]+([^A-Z]+)[\r\n ]+[A-Z_].+" "\\1;\\2" lua_objects "${lua_makefile}")
 string(REGEX REPLACE "[\r\t\n ]+\\\\[\r\t\n ]+" " " lua_objects "${lua_objects}")
 string(STRIP "${lua_objects}" lua_objects)
 string(REGEX REPLACE "[\r\n ]+" ";" lua_objects "${lua_objects}")
 
 # Parse out source files and headers
-string(REGEX REPLACE ".+# DO NOT DELETE[\r\n ]+(.+)#.+" "\\1" lua_sources "${lua_makefile}")
+string(REGEX REPLACE ".+# DO NOT DELETE[\r\n ]+([^#]+).+" "\\1" lua_sources "${lua_makefile}")
 string(REGEX REPLACE "[\r\t\n ]+\\\\[\r\t\n ]+" " " lua_sources "${lua_sources}")
 string(STRIP "${lua_sources}" lua_sources)
 string(REGEX REPLACE "[\r\n]+" ";" lua_sources "${lua_sources}")
@@ -61,6 +61,7 @@ string(REGEX REPLACE "[: ]+" "\\\\;" lua_sources "${lua_sources}")
 set(source_files "")
 set(header_files "")
 foreach(object_sources IN LISTS lua_sources)
+
     list(GET object_sources 0 object)
     list(GET object_sources 1 source_file)
     list(SUBLIST object_sources 2 -1 header_file_list)

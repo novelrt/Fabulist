@@ -7,7 +7,12 @@
 using namespace fabulist::compiler;
 
 static lua_CFunction state_setup_actions[] = {
+
+// TODO: determine what compat is necessary on other versions
+#if LUA_VERSION_NUM == 501
     &luaopen_compat,
+#endif
+
     &setup_state,
 
     &setup_speaker,

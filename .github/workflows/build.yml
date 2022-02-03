@@ -8,6 +8,7 @@ on:
 jobs:
   build:
     runs-on: ${{ matrix.os }}
+    continue-on-error: ${{ matrix.lua == '5.1' }}
     strategy:
       matrix:
         os: [ windows-latest, ubuntu-latest ]
