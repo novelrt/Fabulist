@@ -1,16 +1,31 @@
 include(CMakeDependentOption)
 include(FetchContent)
 
-set(FABULIST_LUA_VERSION "5.1.5" CACHE STRING
+set(lua_versions
+    "5.1\;https://www.lua.org/ftp/lua-5.1.5.tar.gz\;SHA512=0142fefcbd13afcd9b201403592aa60620011cc8e8559d4d2db2f92739d18186860989f48caa45830ff4f99bfc7483287fd3ff3a16d4dec928e2767ce4d542a9"
+    "5.2\;https://www.lua.org/ftp/lua-5.2.4.tar.gz\;SHA512=cd77148aba4b707b6c159758b5e8444e04f968092eb98f6b4c405b2fb647e709370d5a8dcf604176101d3407e196a7433b5dcdce4fe9605c76191d3649d61a8c"
+    "5.3\;https://www.lua.org/ftp/lua-5.3.6.tar.gz\;SHA512=ccc380d5e114d54504de0bfb0321ca25ec325d6ff1bfee44b11870b660762d1a9bf120490c027a0088128b58bb6b5271bbc648400cab84d2dc22b512c4841681"
+    "5.4\;https://www.lua.org/ftp/lua-5.4.4.tar.gz\;SHA512=af0c35d5ba00fecbb2dd617bd7b825edf7418a16a73076e04f2a0df58cdbf098dc3ff4402e974afd789eb5d86d2e12ec6df9c84b99b23656ea694a85f83bcd21"
+)
+
+set(FABULIST_LUA_VERSION "5.1" CACHE STRING
     "Fabulist vendored Lua library version")
 
-if(NOT "${FABULIST_LUA_VERSION}" STREQUAL "5.1.5")
-    message(WARNING "FABULIST_LUA_VERSION is not currently respected")
+foreach(version IN LISTS lua_versions)
+    list(GET version 0 lua_version)
+    if(FABULIST_LUA_VERSION VERSION_EQUAL lua_version)
+        list(GET version 1 lua_url)
+        list(GET version 2 lua_hash)
+    endif()
+endforeach()
+
+if(NOT lua_url)
+    message(FATAL_ERROR "Could not determine URL for building Lua ${FABULIST_LUA_VERSION}")
 endif()
 
 FetchContent_Declare(lua
-    URL https://www.lua.org/ftp/lua-5.1.5.tar.gz
-    URL_HASH SHA512=0142fefcbd13afcd9b201403592aa60620011cc8e8559d4d2db2f92739d18186860989f48caa45830ff4f99bfc7483287fd3ff3a16d4dec928e2767ce4d542a9
+    URL "${lua_url}"
+    URL_HASH "${lua_hash}"
 
     PREFIX "${CMAKE_CURRENT_BINARY_DIR}"
     TMP_DIR "${CMAKE_CURRENT_BINARY_DIR}/tmp"
@@ -85,7 +100,7 @@ add_library(lua::lua ALIAS lua)
 set_target_properties(lua
     PROPERTIES
         OUTPUT_NAME fabulist-lua
-        VERSION ${FABULIST_THIRDPARTY_LUA_VERSION}
+        VERSION ${FABULIST_LUA_VERSION}
 )
 target_include_directories(lua
     PUBLIC
