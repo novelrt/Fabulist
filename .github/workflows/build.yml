@@ -12,6 +12,7 @@ jobs:
       matrix:
         os: [ windows-latest, ubuntu-latest ]
         configuration: [ RelWithDebInfo, MinSizeRel ]
+        lua: [ "5.1", "5.2", "5.3", "5.4" ]
 
     steps:
     - uses: actions/checkout@v2
@@ -24,9 +25,9 @@ jobs:
         cmake \
           -DCMAKE_BUILD_TYPE="${{ matrix.configuration }}" \
           -DCMAKE_INSTALL_PREFIX=inst \
+          -DFABULIST_LUA_VERSION="${{ matrix.lua }}" \
           -DFABULIST_THIRDPARTY=ON \
-            -DFABULIST_THIRDPARTY_LUA=ON \
-            -DFABULIST_THIRDPARTY_SOL=ON \
+            -DFABULIST_THIRDPARTY_JSON=ON \
           -DFABULIST_COMPILER=ON \
             -DFABULIST_COMPILER_CLI=ON \
           -DFABULIST_RUNTIME=ON \
@@ -43,5 +44,5 @@ jobs:
     - name: Upload artifacts
       uses: actions/upload-artifact@v2
       with:
-        name: fabulist-${{ matrix.os }}-${{ matrix.configuration }}
+        name: fabulist-${{ matrix.os }}-${{ matrix.configuration }}-lua${{ matrix.lua }}
         path: inst
