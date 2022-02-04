@@ -7,16 +7,24 @@ int create_section(lua_State* L)
 
     (void)name;
 
-    lua_pushvalue(L, LUA_REGISTRYINDEX); // +registry
+    lua_pushvalue(L, LUA_REGISTRYINDEX); // registry
 
-    lua_pushliteral(L, "speakers"); // k
-    lua_rawget(L, -2); // t[k]
+    lua_newtable(L); // section
+
+    lua_pushliteral(L, "sections");
+    lua_rawget(L, -3); // registry["sections"]
 
     lua_pushvalue(L, 1); // k
-    lua_newtable(L); // v
-    lua_rawset(L, -3); // t[k] = v
+    lua_pushvalue(L, -3); // v
+    lua_rawset(L, -3); // registry["sections"][k] = v
 
-    lua_pop(L, 1); // -registry
+    lua_pop(L, 1); // registry["sections"]
+
+    lua_pushliteral(L, "current_section"); // k
+    lua_pushvalue(L, -2); // v
+    lua_rawset(L, -4); // registry[k] = v
+
+    lua_pop(L, 2); // registry, section
 
     return 0;
 }

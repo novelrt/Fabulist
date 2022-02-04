@@ -36,7 +36,9 @@ int main(int argc, char** argv)
 
     if (*output_location == '-')
     {
+        std::cerr << cli::verbose << "Saving to standard output\n";
         compiler.save(std::cout);
+        std::cout << '\n';
     }
     else
     {

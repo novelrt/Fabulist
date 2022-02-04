@@ -13,7 +13,10 @@ add_library(compiler
     compiler/save.cpp
 
     compiler/setup.cpp
+
     compiler/setup/actions.cpp
+    compiler/setup/actions/jump.cpp
+
     compiler/setup/base.cpp
     compiler/setup/options.cpp
     compiler/setup/section.cpp

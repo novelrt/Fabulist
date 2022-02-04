@@ -1,20 +1,4 @@
-#include "common.hpp"
-
-#define ACTIONS \
-    ACTION(jump)
-
-enum class action
-{
-#define ACTION(name) name,
-ACTIONS
-#undef ACTION
-};
-
-template <action Action>
-int call_action(lua_State* L)
-{
-    return luaL_error(L, "Unimplemented action");
-}
+#include "actions.hpp"
 
 static luaL_Reg actions[] = {
 #define ACTION(name) { #name, call_action<action::name> },

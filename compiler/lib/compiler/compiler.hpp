@@ -28,7 +28,6 @@ class compiler
         compiler& operator=(compiler&&) = default;
 
         lua_State* state;
-        //std::vector<section> sections;
 };
 
 }
