@@ -66,7 +66,7 @@ std::optional<std::string_view> find_valued_argument(
 std::optional<cli::parsed_arguments> cli::parse_arguments(
     int argc, char const** argv)
 {
-    cli::parsed_arguments result;
+    cli::parsed_arguments result{ {}, std::nullopt, false, false };
 
     cli::detail::set_program_name(argv[0]);
 
