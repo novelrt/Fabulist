@@ -27,12 +27,15 @@ add_library(compiler
 
 set(public_headers
     include/fabulist/compiler/compiler.hpp
+    include/fabulist/compiler/section.hpp
 )
 
 generate_export_header(compiler
     PREFIX_NAME FABULIST_
     EXPORT_FILE_NAME fabulist_compiler_export.hpp
 )
+
+list(APPEND public_headers ${CMAKE_CURRENT_BINARY_DIR}/fabulist_compiler_export.hpp)
 
 set_target_properties(compiler
     PROPERTIES

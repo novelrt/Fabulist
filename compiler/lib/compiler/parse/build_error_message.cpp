@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <iterator>
 #include <numeric>
 
 #include "../compiler.hpp"

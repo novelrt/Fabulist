@@ -6,11 +6,39 @@
 
 using namespace fabulist::compiler;
 
-int main(int argc, char** argv)
+template <typename T>
+struct wrap_optional
 {
-    char const* output_location = "-";
-    int file_idx;
-    if (!cli::parseargs(argc, argv, &output_location, &file_idx))
+    using type = std::optional<T>;
+};
+
+template <typename T>
+struct wrap_optional<std::optional<T>>
+{
+    using type = std::optional<T>;
+};
+
+template <typename T>
+using wrap_optional_t = typename wrap_optional<T>::type;
+
+template <typename T>
+wrap_optional_t<T> get_member(std::optional<cli::parsed_arguments> arguments,
+    T cli::parsed_arguments::*member)
+{
+    if (!arguments.has_value())
+        return std::nullopt;
+
+    return arguments.value().*member;
+}
+
+int main(int argc, char const** argv)
+{
+    auto args = cli::parse_arguments(argc, argv);
+
+    if (args.has_value())
+        cli::setup_output(args.value());
+
+    if (get_member(args, &cli::parsed_arguments::show_usage).value_or(true))
     {
         std::cerr << cli::usage;
         return 1;
@@ -18,10 +46,13 @@ int main(int argc, char** argv)
 
     compiler compiler;
 
-    for (int i = file_idx; i < argc; i++)
+    auto files = get_member(args, &cli::parsed_arguments::input_files)
+        .value_or(std::vector<std::string>{});
+    for (const auto& file : files)
     {
-        std::filesystem::path path{argv[i]};
+        std::filesystem::path path{file};
         std::cerr << cli::verbose << "Parsing " << path << "\n";
+
         try
         {
             compiler.parse(path);
@@ -34,7 +65,9 @@ int main(int argc, char** argv)
         }
     }
 
-    if (*output_location == '-')
+    auto output_file = get_member(args, &cli::parsed_arguments::output_file)
+        .value_or("-");
+    if (output_file[0] == '-')
     {
         std::cerr << cli::verbose << "Saving to standard output\n";
         compiler.save(std::cout);
@@ -42,7 +75,7 @@ int main(int argc, char** argv)
     }
     else
     {
-        std::filesystem::path output{output_location};
+        std::filesystem::path output{output_file};
         std::cerr << cli::verbose << "Saving to " << output << "\n";
         compiler.save(output);
     }
