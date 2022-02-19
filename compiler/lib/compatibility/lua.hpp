@@ -35,7 +35,8 @@ int lua_load(lua_State* L, lua_Reader reader, void* data, char const* source, ch
 #define lua_cpall(...) static_assert(false, "use lua_pushcfunction and lua_pcall")
 #define lua_equal(...) static_assert(false, "use lua_compare instead")
 #define lua_lessthan(...) static_assert(false, "use lua_compare instead")
-#define lua_rawlen lua_objlen
+#define lua_objlen(...) static_assert(false, "use lua_rawlen instead")
+#define lua_rawlen(...) (lua_objlen)(__VA_ARGS__)
 
 void luaL_setfuncs(lua_State* L, luaL_Reg const* reg, int nup);
 void lua_resume(lua_State* L, lua_State* from, int nargs);

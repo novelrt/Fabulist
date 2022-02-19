@@ -15,7 +15,7 @@ static int create_options_action(lua_State* L)
     lua_pushliteral(L, "current_section");
     lua_rawget(L, -2);
 
-    size_t length = lua_objlen(L, -1);
+    size_t length = lua_rawlen(L, -1);
 
     lua_createtable(L, 0, 3);
 
