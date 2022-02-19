@@ -99,7 +99,7 @@ add_library(lua ${source_files})
 add_library(lua::lua ALIAS lua)
 set_target_properties(lua
     PROPERTIES
-        OUTPUT_NAME fabulist-lua
+        OUTPUT_NAME fabulist-lua-$<CONFIG>
         VERSION ${FABULIST_LUA_VERSION}
 )
 target_include_directories(lua

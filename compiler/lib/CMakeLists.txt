@@ -39,7 +39,7 @@ list(APPEND public_headers ${CMAKE_CURRENT_BINARY_DIR}/fabulist_compiler_export.
 
 set_target_properties(compiler
     PROPERTIES
-        OUTPUT_NAME fabulist-compiler
+        OUTPUT_NAME fabulist-compiler-$<CONFIG>
         PUBLIC_HEADER "${public_headers}"
 )
 
