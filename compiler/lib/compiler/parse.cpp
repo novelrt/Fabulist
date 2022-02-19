@@ -24,9 +24,9 @@ char const* read_func(lua_State*, void* data, size_t* size)
     if (reader->stream)
     {
         auto read = reader->stream.readsome(
-            reader->buffer.data(), reader->buffer.size());
+            reader->buffer.data(), (std::streamsize)reader->buffer.size());
 
-        *size = read;
+        *size = (std::size_t)read;
         return reader->buffer.data();
     }
 

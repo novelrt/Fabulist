@@ -46,7 +46,7 @@ nlohmann::json table_to_json(lua_State* L)
         if (lua_type(L, -2) == LUA_TNUMBER)
         {
             auto index = lua_tonumber(L, -2);
-            is_array = is_array && (static_cast<size_t>(index) == index) && is_contiguous(values);
+            is_array = is_array && ((lua_Number)(size_t)index == index) && is_contiguous(values);
             values.emplace(lua_tonumber(L, -2), to_json(L));
         }
         else if (lua_type(L, -2) == LUA_TSTRING)

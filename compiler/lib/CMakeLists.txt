@@ -62,6 +62,17 @@ target_link_libraries(compiler
         lua::lua
 )
 
+target_compile_options(compiler
+    PRIVATE
+        $<$<CXX_COMPILER_ID:MSVC>:/D_CRT_SECURE_NO_WARNINGS /D_SCL_NO_WARNINGS /D__STDC_WANT_SECURE_LIB__=1> # function or variable may be unsafe
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4464> # relative include path contains '..'
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4820> # bytes padding after data member
+        $<$<CXX_COMPILER_ID:MSVC>:/wd5045> # compiler will insert spectre mitigation for memory load
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4623> # default constructor was implicitly defined as deleted
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4626> # assignment operator was implicitly defined as deleted
+        $<$<CXX_COMPILER_ID:MSVC>:/wd5027> # move assignment operator was implicitly defined as deleted
+)
+
 install(
     TARGETS compiler
     EXPORT fabulist

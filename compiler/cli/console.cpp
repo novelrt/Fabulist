@@ -3,13 +3,10 @@
 #include "console.hpp"
 
 // A dummy ostream used to disable verbose output if the flag isn't set
-class null_buffer : public std::streambuf
-{ };
-
-class null_ostream : private null_buffer, public std::ostream
+class null_ostream : public std::ostream
 {
 public:
-    null_ostream() : std::ostream(this)
+    null_ostream() : std::ostream(nullptr)
     { }
 };
 

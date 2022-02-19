@@ -54,7 +54,7 @@ std::string build_error_message(error_handler_result* result)
 
     size_t size = std::accumulate(
         lines.begin(), lines.end(),
-        0,
+        (size_t)0,
         [](size_t l, const std::string& r){
             return l + r.size();
         });

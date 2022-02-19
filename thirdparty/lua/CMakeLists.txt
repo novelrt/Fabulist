@@ -103,11 +103,21 @@ set_target_properties(lua
         VERSION ${FABULIST_LUA_VERSION}
 )
 target_include_directories(lua
+    SYSTEM INTERFACE
+        $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:$<BUILD_INTERFACE:${lua_SOURCE_DIR}/src>>
+)
+
+target_compile_definitions(lua
     PUBLIC
-        $<BUILD_INTERFACE:${lua_SOURCE_DIR}/src>
+        LUA_ANSI
 )
 
 target_compile_options(lua
+    INTERFACE
+        $<$<CXX_COMPILER_ID:MSVC>:/experimental:external>
+        $<$<CXX_COMPILER_ID:MSVC>:/external:I$<BUILD_INTERFACE:${lua_SOURCE_DIR}/src>>
+        $<$<CXX_COMPILER_ID:MSVC>:/external:W0>
+        $<$<CXX_COMPILER_ID:MSVC>:/external:templates->
     PRIVATE
         $<$<CXX_COMPILER_ID:AppleClang>:-Wno-empty-body>
         $<$<CXX_COMPILER_ID:Clang>:-Wno-empty-body>
@@ -123,6 +133,15 @@ target_compile_options(lua
         $<$<CXX_COMPILER_ID:Clang>:-Wno-misleading-indentation>
         $<$<CXX_COMPILER_ID:GNU>:-Wno-misleading-indentation>
         # $<$<CXX_COMPILER_ID:MSVC>:/wd4390> # no msvc error for this?
+
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4820> # bytes padding added after data member
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4061> # enum values are not explicitly handled
+        $<$<CXX_COMPILER_ID:MSVC>:/D_CRT_SECURE_NO_WARNINGS /D_SCL_NO_WARNINGS /D__STDC_WANT_SECURE_LIB__=0> # function or variable may be unsafe
+        $<$<CXX_COMPILER_ID:MSVC>:/wd5220> # non-static data member with a volatile qualified type
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4365> # conversion from 'a' to 'b', signed/unsigned mismatch
+        $<$<CXX_COMPILER_ID:MSVC>:/wd5045> # compiler will insert spectre mitigation for memory load
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4334> # result of 32-bit shift implicitly converted to 64-bits
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4774> # format string expected in argument 2 is not a string literal
 )
 
 install(

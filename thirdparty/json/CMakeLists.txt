@@ -24,5 +24,13 @@ add_library(nlohmann_json::nlohmann_json INTERFACE IMPORTED GLOBAL)
 
 target_include_directories(nlohmann_json::nlohmann_json
     INTERFACE
-        $<BUILD_INTERFACE:${json_SOURCE_DIR}/include>
+        $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:$<BUILD_INTERFACE:${json_SOURCE_DIR}/include>>
+)
+
+target_compile_options(nlohmann_json::nlohmann_json
+    INTERFACE
+        $<$<CXX_COMPILER_ID:MSVC>:/experimental:external>
+        $<$<CXX_COMPILER_ID:MSVC>:/external:I$<BUILD_INTERFACE:${json_SOURCE_DIR}/include>>
+        $<$<CXX_COMPILER_ID:MSVC>:/external:W0>
+        $<$<CXX_COMPILER_ID:MSVC>:/external:templates->
 )
