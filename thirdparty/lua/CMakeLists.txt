@@ -92,7 +92,6 @@ foreach(file IN LISTS source_files header_files)
             "$<$<CXX_COMPILER_ID:AppleClang>:--language=c++>"
             "$<$<CXX_COMPILER_ID:Clang>:--language=c++>"
             "$<$<CXX_COMPILER_ID:GNU>:--language=c++>"
-            "$<$<CXX_COMPILER_ID:MSVC>:/Tp>"
     )
 endforeach()
 
