@@ -136,7 +136,7 @@ target_compile_options(lua
 
         $<$<CXX_COMPILER_ID:MSVC>:/wd4820> # bytes padding added after data member
         $<$<CXX_COMPILER_ID:MSVC>:/wd4061> # enum values are not explicitly handled
-        $<$<CXX_COMPILER_ID:MSVC>:/D_CRT_SECURE_NO_WARNINGS /D_SCL_NO_WARNINGS /D__STDC_WANT_SECURE_LIB__=0> # function or variable may be unsafe
+        $<$<CXX_COMPILER_ID:MSVC>:/D_CRT_SECURE_NO_WARNINGS /D_SCL_NO_WARNINGS> # function or variable may be unsafe
         $<$<CXX_COMPILER_ID:MSVC>:/wd5220> # non-static data member with a volatile qualified type
         $<$<CXX_COMPILER_ID:MSVC>:/wd4365> # conversion from 'a' to 'b', signed/unsigned mismatch
         $<$<CXX_COMPILER_ID:MSVC>:/wd5045> # compiler will insert spectre mitigation for memory load
