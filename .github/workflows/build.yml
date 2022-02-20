@@ -27,13 +27,7 @@ jobs:
           -DCMAKE_BUILD_TYPE="${{ matrix.configuration }}" \
           -DCMAKE_INSTALL_PREFIX=inst \
           -DFABULIST_LUA_VERSION="${{ matrix.lua }}" \
-          -DFABULIST_THIRDPARTY=ON \
-            -DFABULIST_THIRDPARTY_JSON=ON \
-          -DFABULIST_COMPILER=ON \
-            -DFABULIST_COMPILER_CLI=ON \
-          -DFABULIST_RUNTIME=ON \
-          -DFABULIST_SAMPLES=ON \
-            -DFABULIST_SAMPLE_CLI=ON \
+          -DFABULIST_ALL_ON=ON \
           -Wdev -Wdeprecated -Werror=dev -Werror=deprecated -S . -B build
 
     - name: Build Fabulist
@@ -47,3 +41,26 @@ jobs:
       with:
         name: fabulist-${{ matrix.os }}-${{ matrix.configuration }}-lua${{ matrix.lua }}
         path: inst
+
+  merge-artifacts:
+    needs: build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ windows-latest, ubuntu-latest ]
+        lua: [ "5.1", "5.2", "5.3", "5.4" ]
+
+    steps:
+    - uses: actions/download-artifact@v2
+      with:
+        path: artifacts
+    - name: Merge build artifacts
+      run: |
+      mkdir merged
+      for artifact in $(find ./artifacts/ -type d -name "fabulist-${{ matrix.os }}-*-lua${{ matrix.lua }}"); do
+        cp -RT "$artifact" merged/
+      done
+    - name: Upload merged artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: fabulist-${{ matrix.os }}-lua${{ matrix.lua }}
