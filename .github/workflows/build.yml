@@ -56,10 +56,10 @@ jobs:
         path: artifacts
     - name: Merge build artifacts
       run: |
-      mkdir merged
-      for artifact in $(find ./artifacts/ -type d -name "fabulist-${{ matrix.os }}-*-lua${{ matrix.lua }}"); do
-        cp -RT "$artifact" merged/
-      done
+        mkdir merged
+        for artifact in $(find ./artifacts/ -type d -name "fabulist-${{ matrix.os }}-*-lua${{ matrix.lua }}"); do
+            cp -RT "$artifact" merged/
+        done
     - name: Upload merged artifacts
       uses: actions/upload-artifact@v2
       with:
