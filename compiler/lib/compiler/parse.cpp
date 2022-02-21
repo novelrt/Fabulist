@@ -23,10 +23,22 @@ char const* read_func(lua_State*, void* data, size_t* size)
 
     if (reader->stream)
     {
-        auto read = reader->stream.readsome(
-            reader->buffer.data(), (std::streamsize)reader->buffer.size());
+        if (reader->stream.rdbuf()->in_avail() > 0)
+        {
+            // Attempt to read out of the buffer without blocking if we can
+            auto read = reader->stream.readsome(
+                reader->buffer.data(), (std::streamsize)reader->buffer.size());
 
-        *size = (std::size_t)read;
+            *size = (std::size_t)read;
+        }
+        else
+        {
+            // Otherwise, fall back to a traditional blocking read
+            reader->stream.read(reader->buffer.data(), (std::streamsize)reader->buffer.size());
+
+            *size = reader->stream.gcount();
+        }
+
         return reader->buffer.data();
     }
 
