@@ -6,6 +6,28 @@ on:
     - 'main'
 
 jobs:
+  create-release:
+    runs-on: ubuntu-latest
+
+    outputs:
+      release: ${{ steps.tag_version.outputs.new_tag }}
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - uses: mathieudutour/github-tag-action@v6.0
+      id: tag_version
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+
+    - uses: ncipollo/release-action@v1
+      with:
+        tag: ${{ steps.tag_version.outputs.new_tag }}
+        name: Fabulist ${{ steps.tag_version.outputs.new_tag }}
+        body: ${{ steps.tag_version.outputs.changelog }}
+        prerelease: true
+        draft: true
+
   build:
     runs-on: ${{ matrix.os }}
     continue-on-error: ${{ matrix.lua == '5.1' }}
@@ -43,7 +65,7 @@ jobs:
         path: inst
 
   merge-artifacts:
-    needs: build
+    needs: [build, create-release]
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -65,3 +87,18 @@ jobs:
       with:
         name: fabulist-${{ matrix.os }}-lua${{ matrix.lua }}
         path: merged
+
+    - uses: actions/download-artifact@v2
+      with:
+        name: fabulist-${{ matrix.os }}-lua${{ matrix.lua }}
+
+    - name: Create release artifact
+      run: |
+        cd merged
+        zip -r "../fabulist-${{ matrix.os }}-lua${{ matrix.lua }}.zip" .
+        cd ..
+
+    - name: Add merged artifacts to release
+      run: gh release upload "${{ needs.create-release.outputs.release }}" "fabulist-${{ matrix.os }}-lua${{ matrix.lua }}.zip" --repo "$GITHUB_REPOSITORY"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
