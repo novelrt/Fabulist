@@ -36,7 +36,7 @@ char const* read_func(lua_State*, void* data, size_t* size)
             // Otherwise, fall back to a traditional blocking read
             reader->stream.read(reader->buffer.data(), (std::streamsize)reader->buffer.size());
 
-            *size = reader->stream.gcount();
+            *size = (std::size_t)reader->stream.gcount();
         }
 
         return reader->buffer.data();
