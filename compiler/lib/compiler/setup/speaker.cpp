@@ -41,7 +41,7 @@ static int speaker_line(lua_State* L)
     lua_rawget(L, -2); // registry[k]
     size_t size = lua_rawlen(L, -1); // #registry[k]
     lua_pushvalue(L, -3); // v
-    lua_rawseti(L, -2, size + 1); // registry[k][#registry[k] + 1] = v
+    lua_rawseti(L, -2, (int)(size + 1)); // registry[k][#registry[k] + 1] = v
 
     lua_pop(L, 1);
 
