@@ -19,9 +19,10 @@ via direct message on Discord or by contacting us via
 
 This is a rough synopsis of the project structure as it stands today:
 
-#### `cli` ####
+#### `compiler` ####
 
-A small command-line utility for evaluating Fabulist scripts.
+The Fabulist compiler library and frontend, for translating Fabulist files to
+an intermediate format used by the runtime.
 
 #### `docs` ####
 
@@ -37,9 +38,13 @@ testing. As the language is fleshed out, there will be more examples added here.
 Effectively scratch space, this directory is used for rapid development and
 prototyping of Fabulist syntax.
 
-#### `src` ####
+#### `runtime` ####
 
 The implementation of the Fabulist runtime, in ABI-portable C++.
+
+#### `samples` ####
+
+Samples using the Fabulist compiler or runtime.
 
 #### `thirdparty` ####
 
@@ -51,7 +56,6 @@ Before building Fabulist, you need to install some dependencies, and ensure
 they can be located by CMake
 
 #### Dependencies ####
-1. Lua 5.1 (Version TBD) (Debian-derivatives: `liblua5.1-0-dev`)
 2. A C++ compiler supporting C++17 (Debian-derivates: `build-essential`)
 3. CMake 3.18 (Debian-derivatives: `cmake`)
 
