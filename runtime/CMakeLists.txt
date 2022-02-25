@@ -1,21 +1,16 @@
 include(GenerateExportHeader)
 
 add_library(runtime
-    speaker.cpp
     story.cpp
-    story/environment.cpp
-    story/implementation.cpp
-    story/loading.cpp
 )
 
 set(public_headers
-    include/fabulist/speaker.hpp
-    include/fabulist/story.hpp
+    include/fabulist/runtime/story.hpp
 )
 
 generate_export_header(runtime
     PREFIX_NAME FABULIST_
-    EXPORT_FILE_NAME fabulist_export.hpp
+    EXPORT_FILE_NAME fabulist_runtime_export.hpp
 )
 
 set_target_properties(runtime
@@ -47,5 +42,5 @@ install(
     TARGETS runtime
     EXPORT fabulist
     LIBRARY DESTINATION lib
-    PUBLIC_HEADER DESTINATION include/fabulist
+    PUBLIC_HEADER DESTINATION include/fabulist/runtime
 )
