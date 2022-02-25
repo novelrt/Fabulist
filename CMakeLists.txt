@@ -40,8 +40,8 @@ if(FABULIST_COMPILER)
 endif()
 
 if(FABULIST_RUNTIME)
-    message(WARNING "Fabulist runtime is currently broken - refusing to build runtime")
-    # add_subdirectory(runtime)
+    message(STATUS "Building runtime")
+    add_subdirectory(runtime)
 endif()
 
 if(FABULIST_SAMPLES)
