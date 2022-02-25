@@ -23,6 +23,7 @@ struct parsed_arguments
     std::optional<std::string> output_file;
     bool enable_verbose;
     bool show_usage;
+    bool show_version;
 };
 
 std::ostream& error(std::ostream& stream);

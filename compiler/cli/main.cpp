@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include <fabulist/compiler/compiler.hpp>
+#include <fabulist/compiler/version.hpp>
 
 #include "console.hpp"
 
@@ -41,6 +42,12 @@ int main(int argc, char const** argv)
     if (get_member(args, &cli::parsed_arguments::show_usage).value_or(true))
     {
         std::cerr << cli::usage;
+        return 1;
+    }
+
+    if (get_member(args, &cli::parsed_arguments::show_version).value_or(false))
+    {
+        std::cerr << "Fabulist compiler " << fabulist::compiler::get_version_string() << "\n";
         return 1;
     }
 

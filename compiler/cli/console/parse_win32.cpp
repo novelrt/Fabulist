@@ -17,7 +17,8 @@ std::ostream& cli::detail::usage(std::ostream& stream,
         << "  /?, /h       Display this help and exit\n"
         << "  /O:OUTPUT    Output file to save generated story\n"
         << "               (default: fabulist.json)\n"
-        << "  /v           Enable verbose mode\n";
+        << "  /V           Enable verbose mode\n"
+        << "  /v           Display compiler version and exist\n";
 }
 
 bool find_flag_argument(std::string_view argument, std::string_view value)
@@ -78,8 +79,11 @@ std::optional<cli::parsed_arguments> cli::parse_arguments(
     retry:
         if (options)
         {
-            if (find_flag_argument("v", argument))
+            if (find_flag_argument("V", argument))
                 result.enable_verbose = true;
+
+            if (find_flag_argument("v", argument))
+                result.show_version = true;
 
             else if (find_flag_argument("?", argument)
                 || find_flag_argument("h", argument))
@@ -108,7 +112,7 @@ std::optional<cli::parsed_arguments> cli::parse_arguments(
         }
     }
 
-    if (result.input_files.empty() && !result.show_usage)
+    if (result.input_files.empty() && !(result.show_usage || result.show_version))
     {
         std::cerr << cli::error << "missing operand\n";
         return std::nullopt;

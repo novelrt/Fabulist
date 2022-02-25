@@ -18,7 +18,8 @@ std::ostream& cli::detail::usage(std::ostream& stream,
         << "  -h, --help             Display this help and exit\n"
         << "  -o, --output=OUTPUT    Output file to save generated story\n"
         << "                         (default: fabulist.json)\n"
-        << "  -v, --verbose          Enable verbose mode\n";
+        << "  -V, --verbose          Enable verbose mode\n"
+        << "  -v, --version          Display compiler version and exit\n";
 }
 
 
@@ -30,7 +31,8 @@ std::optional<cli::parsed_arguments> cli::parse_arguments(
     struct option options[] = {
         { "output", optional_argument, nullptr, 'o' },
         { "help", no_argument, nullptr, 'h' },
-        { "verbose", no_argument, nullptr, 'v'},
+        { "verbose", no_argument, nullptr, 'V'},
+        { "version", no_argument, nullptr, 'v'},
         { nullptr, 0, nullptr, 0}
     };
 
@@ -42,7 +44,7 @@ std::optional<cli::parsed_arguments> cli::parse_arguments(
     int longopt_ind = 0;
     while (true)
     {
-        int c = getopt_long(argc, AAAAA, "hvo:", options, &longopt_ind);
+        int c = getopt_long(argc, AAAAA, "hvVo:", options, &longopt_ind);
         if (c == -1) break;
 
         switch (c)
@@ -52,6 +54,10 @@ std::optional<cli::parsed_arguments> cli::parse_arguments(
                 break;
 
             case 'v':
+                result.show_version = true;
+                break;
+
+            case 'V':
                 result.enable_verbose = true;
                 break;
 
@@ -64,7 +70,7 @@ std::optional<cli::parsed_arguments> cli::parse_arguments(
         }
     }
 
-    if (optind >= argc)
+    if (optind >= argc && !(result.show_usage || result.show_version))
     {
         std::cerr << cli::error << "missing operand\n";
         return std::nullopt;
