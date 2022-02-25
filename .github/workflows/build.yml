@@ -69,7 +69,7 @@ jobs:
         path: inst
 
   merge-artifacts:
-    needs: [build, create-release]
+    needs: [ build, create-release ]
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -116,5 +116,17 @@ jobs:
 
     steps:
     - run: gh api "repos/$GITHUB_REPOSITORY/releases/${{ needs.merge-artifacts.outputs.release-id }}" -X PATCH -F draft=false --silent
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  delete-release:
+    needs: [ build, create-release ]
+    if: ${{ failure() }}
+    runs-on: ubuntu-latest
+    steps:
+    - run: gh release delete "${{ needs.create-release.outputs.tag }}" -y --repo "$GITHUB_REPOSITORY"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - run: gh api "repos/$GITHUB_REPOSITORY/git/refs/tags/${{ needs.create-release.outputs.tag}}"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
