@@ -19,6 +19,14 @@ class section;
 class FABULIST_RUNTIME_EXPORT section
 {
     public:
+        explicit section();
+        ~section() noexcept;
+        section(const section&) = delete;
+        section& operator=(const section&) = delete;
+        section(section&&);
+        section& operator=(section&&);
+
+
         std::string get_name();
 
     private:
