@@ -10,7 +10,8 @@ jobs:
     runs-on: ubuntu-latest
 
     outputs:
-      release: ${{ steps.tag_version.outputs.new_tag }}
+      tag: ${{ steps.tag_version.outputs.new_tag }}
+      id: ${{ steps.create_release.outputs.id }}
 
     steps:
     - uses: actions/checkout@v2
@@ -21,6 +22,7 @@ jobs:
         github_token: ${{ secrets.GITHUB_TOKEN }}
 
     - uses: ncipollo/release-action@v1
+      id: create_release
       with:
         tag: ${{ steps.tag_version.outputs.new_tag }}
         name: Fabulist ${{ steps.tag_version.outputs.new_tag }}
@@ -72,6 +74,9 @@ jobs:
         os: [ windows-latest, ubuntu-latest ]
         lua: [ "5.1", "5.2", "5.3", "5.4" ]
 
+    outputs:
+      release-id: ${{ needs.create-release.outputs.id }}
+
     steps:
     - uses: actions/download-artifact@v2
       with:
@@ -99,6 +104,15 @@ jobs:
         cd ..
 
     - name: Add merged artifacts to release
-      run: gh release upload "${{ needs.create-release.outputs.release }}" "fabulist-${{ matrix.os }}-lua${{ matrix.lua }}.zip" --repo "$GITHUB_REPOSITORY"
+      run: gh release upload "${{ needs.create-release.outputs.tag }}" "fabulist-${{ matrix.os }}-lua${{ matrix.lua }}.zip" --repo "$GITHUB_REPOSITORY"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  publish-release:
+    needs: merge-artifacts
+    runs-on: ubuntu-latest
+
+    steps:
+    - run: gh api "repos/$GITHUB_REPOSITORY/releases/${{ needs.merge-artifacts.outputs.release-id }}" -X PATCH -F draft=false --silent
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
