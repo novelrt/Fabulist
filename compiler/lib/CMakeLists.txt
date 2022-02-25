@@ -1,4 +1,5 @@
 include(GenerateExportHeader)
+include(GitVersion)
 
 add_library(compiler
     $<$<AND:$<VERSION_GREATER_EQUAL:${FABULIST_LUA_VERSION},5.1>,$<VERSION_LESS:${FABULIST_LUA_VERSION},5.2>>:compatibility/lua5.1.cpp>
@@ -23,16 +24,27 @@ add_library(compiler
     compiler/setup/speaker.cpp
 
     section/setup.cpp
+
+    version.cpp
 )
 
 set(public_headers
     include/fabulist/compiler/compiler.hpp
     include/fabulist/compiler/section.hpp
+
+    include/fabulist/compiler/version.hpp
 )
 
 generate_export_header(compiler
     PREFIX_NAME FABULIST_
     EXPORT_FILE_NAME fabulist_compiler_export.hpp
+)
+
+generate_git_version_header(compiler
+    PREFIX_NAME FABULIST_
+    NAMESPACE fabulist::compiler
+    VERSION_FILE_NAME fabulist_compiler_git_version.hpp
+    USE_NAMESPACE USE_STD_STRING_VIEW USE_CONSTEXPR
 )
 
 list(APPEND public_headers ${CMAKE_CURRENT_BINARY_DIR}/fabulist_compiler_export.hpp)
