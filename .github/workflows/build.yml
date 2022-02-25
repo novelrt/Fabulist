@@ -31,6 +31,7 @@ jobs:
         draft: true
 
   build:
+    needs: create-release
     runs-on: ${{ matrix.os }}
     continue-on-error: ${{ matrix.lua == '5.1' }}
     strategy:
@@ -41,6 +42,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
 
     - uses: novelrt/setup-cpp@v1
 
