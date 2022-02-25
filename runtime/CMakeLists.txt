@@ -1,10 +1,14 @@
 include(GenerateExportHeader)
 
 add_library(runtime
+    section.cpp
+    state.cpp
     story.cpp
 )
 
 set(public_headers
+    include/fabulist/runtime/section.hpp
+    include/fabulist/runtime/state.hpp
     include/fabulist/runtime/story.hpp
 )
 
