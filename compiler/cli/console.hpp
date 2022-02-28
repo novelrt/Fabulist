@@ -1,5 +1,5 @@
-#ifndef ARGS_HPP
-#define ARGS_HPP
+#ifndef CONSOLE_HPP
+#define CONSOLE_HPP
 
 #include <optional>
 #include <ostream>
@@ -36,4 +36,4 @@ std::optional<parsed_arguments> parse_arguments(int argc, char const** argv);
 
 }
 
-#endif /* ARGS_HPP */
+#endif /* CONSOLE_HPP */
