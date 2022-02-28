@@ -2,14 +2,22 @@ include(GenerateExportHeader)
 include(GitVersion)
 
 add_library(runtime
+    action.cpp
+
+    actions/line.cpp
+
     section.cpp
     state.cpp
+
     story.cpp
+    story/parse.cpp
 
     version.cpp
 )
 
 set(public_headers
+    include/fabulist/runtime/action.hpp
+
     include/fabulist/runtime/section.hpp
     include/fabulist/runtime/state.hpp
     include/fabulist/runtime/story.hpp
@@ -52,6 +60,8 @@ target_include_directories(runtime
 )
 
 target_link_libraries(runtime
+    PRIVATE
+        nlohmann_json::nlohmann_json
     PUBLIC
         lua::lua
 )
