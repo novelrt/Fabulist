@@ -1,6 +1,8 @@
 #ifndef STORY_HPP
 #define STORY_HPP
 
+#include <filesystem>
+#include <istream>
 #include <memory>
 #include <vector>
 
@@ -36,6 +38,9 @@ class FABULIST_RUNTIME_EXPORT story
     private:
         std::unique_ptr<detail::story> _pimpl;
 };
+
+story parse_story(std::filesystem::path path);
+story parse_story(std::istream& stream);
 
 }
 
