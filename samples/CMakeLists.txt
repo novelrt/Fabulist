@@ -8,6 +8,5 @@ cmake_dependent_option(FABULIST_SAMPLE_CLI
 )
 
 if(FABULIST_SAMPLE_CLI)
-    message(WARNING "Fabulist runtime is currently broken - refusing to build cli sample")
-    # add_subdirectory(cli)
+    add_subdirectory(cli)
 endif()
