@@ -24,7 +24,9 @@ function(extract_git_version prefix)
         RESULT_VARIABLE _git_has_tag
     )
 
-    if (NOT _git_has_tag)
+    string(STRIP "${_git_tag_sha}" _git_tag_sha)
+
+    if (NOT ${_git_has_tag} EQUAL 0)
         set(${prefix}_VERSION_STRING "0.0.0-unknown" PARENT_SCOPE)
         set(${prefix}_VERSION_MAJOR 0 PARENT_SCOPE)
         set(${prefix}_VERSION_MINOR 0 PARENT_SCOPE)
@@ -56,7 +58,7 @@ function(extract_git_version prefix)
     string(REGEX REPLACE [[[0-9]+\.([0-9]+)\.[0-9]+]] "\\1" _git_version_minor "${_git_version}")
     string(REGEX REPLACE [[[0-9]+\.[0-9]+\.([0-9]+)]] "\\1" _git_version_patch "${_git_version}")
 
-    if(_git_staged_changes OR _git_unstaged_changes)
+    if(${_git_staged_changes} OR ${_git_unstaged_changes})
         set(${prefix}_VERSION_STRING "${_git_version}-dirty+${_git_sha}" PARENT_SCOPE)
     else()
         set(${prefix}_VERSION_STRING "${_git_version}+${_git_sha}" PARENT_SCOPE)
