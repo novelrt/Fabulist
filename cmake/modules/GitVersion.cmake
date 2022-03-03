@@ -19,7 +19,21 @@ function(extract_git_version prefix)
     endif()
 
     execute_process(
-        COMMAND "${GIT_PROGRAM}" describe --tags --abbrev=0
+        COMMAND "${GIT_PROGRAM}" rev-list --tags --max-count=1
+        OUTPUT_VARIABLE _git_tag_sha
+        RESULT_VARIABLE _git_has_tag
+    )
+
+    if (NOT _git_has_tag)
+        set(${prefix}_VERSION_STRING "0.0.0-unknown" PARENT_SCOPE)
+        set(${prefix}_VERSION_MAJOR 0 PARENT_SCOPE)
+        set(${prefix}_VERSION_MINOR 0 PARENT_SCOPE)
+        set(${prefix}_VERSION_PATCH 0 PARENT_SCOPE)
+        return()
+    endif()
+
+    execute_process(
+        COMMAND "${GIT_PROGRAM}" describe --tags "${_git_tag_sha}"
         OUTPUT_VARIABLE _git_tag
     )
     execute_process(
