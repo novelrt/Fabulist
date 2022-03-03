@@ -8,7 +8,7 @@ jobs:
     strategy:
       matrix:
         os: [ windows-latest, ubuntu-latest ]
-        lua: [ "5.1", "5.2" ]
+        lua: [ "5.1", "5.2", "5.3", "5.4" ]
 
     steps:
     - uses: actions/checkout@v2
@@ -20,19 +20,20 @@ jobs:
       shell: bash
       run: |
         cmake \
+          -DCMAKE_BUILD_TYPE="Debug" \
           -DCMAKE_INSTALL_PREFIX=inst \
           -DFABULIST_LUA_VERSION="${{ matrix.lua }}" \
           -DFABULIST_ALL_ON=ON \
           -Wdev -Wdeprecated -Werror=dev -Werror=deprecated -S . -B build
 
     - name: Build Fabulist
-      run: cmake --build build --parallel --verbose
+      run: cmake --build build --parallel --config Debug --verbose
 
     - name: Generate artifact
-      run: cmake --install build --verbose
+      run: cmake --install build --config Debug --verbose
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v2
       with:
-        name: fabulist-pr-${{ matrix.os }}
+        name: fabulist-pr-${{ matrix.os }}-lua${{ matrix.lua }}
         path: inst
