@@ -62,8 +62,8 @@ class FABULIST_RUNTIME_EXPORT state
         // TODO: is std::any safe here?
         std::any get_variable(std::string variable);
 
-        story const* story() const noexcept;
-        section const* section() const noexcept;
+        story const* get_story() const noexcept;
+        section const* get_section() const noexcept;
 
         void jump_to_section(std::string const& section);
         std::vector<std::string>::iterator query(std::vector<std::string>& values) const;

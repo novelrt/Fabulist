@@ -31,12 +31,12 @@ std::any state::get_variable(std::string variable)
     return *it;
 }
 
-story const* state::story() const noexcept
+story const* state::get_story() const noexcept
 {
     return _pimpl->story;
 }
 
-section const* state::section() const noexcept
+section const* state::get_section() const noexcept
 {
     return _pimpl->current_section;
 }
