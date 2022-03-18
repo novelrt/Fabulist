@@ -17,9 +17,9 @@ add_library(compiler
 
     compiler/setup/actions.cpp
     compiler/setup/actions/jump.cpp
+    compiler/setup/actions/options.cpp
 
     compiler/setup/base.cpp
-    compiler/setup/options.cpp
     compiler/setup/section.cpp
     compiler/setup/speaker.cpp
 

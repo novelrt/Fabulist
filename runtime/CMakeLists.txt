@@ -3,14 +3,17 @@ include(GitVersion)
 
 add_library(runtime
     action.cpp
-
+    actions/jump.cpp
     actions/line.cpp
+    actions/options.cpp
+
+    decoder.cpp
+
+    runtime.cpp
 
     section.cpp
     state.cpp
-
     story.cpp
-    story/parse.cpp
 
     version.cpp
 )

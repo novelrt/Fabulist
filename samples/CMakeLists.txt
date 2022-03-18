@@ -8,5 +8,6 @@ cmake_dependent_option(FABULIST_SAMPLE_CLI
 )
 
 if(FABULIST_SAMPLE_CLI)
+    message(STATUS "Building cli sample")
     add_subdirectory(cli)
 endif()

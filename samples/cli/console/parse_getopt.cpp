@@ -25,7 +25,7 @@ std::ostream& cli::detail::usage(std::ostream& stream,
 std::optional<cli::parsed_arguments> cli::parse_arguments(
     int argc, char const** argv)
 {
-    cli::parsed_arguments result;
+    cli::parsed_arguments result{};
 
     struct option options[] = {
         { "help", no_argument, nullptr, 'h' },
