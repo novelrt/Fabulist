@@ -7,6 +7,7 @@ add_executable(cli
     # console output utilities
     console.cpp
     $<$<BOOL:${HAVE_GETOPT}>:console/parse_getopt.cpp>
+    $<$<PLATFORM_ID:Windows>:console/parse_win32.cpp>
 
     # main entry point
     main.cpp
