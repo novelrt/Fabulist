@@ -1,6 +1,8 @@
 #ifndef ACTION_HPP
 #define ACTION_HPP
 
+//#include <any>
+//#include <functional>
 #include <memory>
 #include <string>
 
@@ -9,29 +11,40 @@
 namespace fabulist::runtime
 {
 
-namespace detail
+namespace actions
 {
 
 class action;
 
 }
 
+class state;
+
 class FABULIST_RUNTIME_EXPORT action
 {
     public:
-        virtual ~action() noexcept;
+        template <typename Action,
+            typename = std::enable_if<std::is_base_of<actions::action, Action>::value>>
+        explicit action(Action&& action)
+            : _impl{ std::make_unique<Action>(std::forward<Action>(action)) }
+        { };
+        ~action() noexcept = default;
         action(const action&) = delete;
         action& operator=(const action&) = delete;
-        action(action&&);
-        action& operator=(action&&);
+        action(action&&) = default;
+        action& operator=(action&&) = default;
 
-        std::string type();
+        std::string type() const;
+        void execute(state& state) const;
 
+        actions::action* operator->();
+        actions::action const* operator->() const;
 
-    protected:
-        explicit action(detail::action* pimpl);
+        actions::action* operator*();
+        actions::action const* operator*() const;
 
-        std::unique_ptr<detail::action> _pimpl;
+    private:
+        std::unique_ptr<actions::action> _impl;
 };
 
 }

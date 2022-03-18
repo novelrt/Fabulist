@@ -1,17 +1,33 @@
 #include <fabulist/runtime/action.hpp>
-#include <fabulist/runtime/action_private.hpp>
+#include <fabulist/runtime/actions/action.hpp>
 
 using namespace fabulist::runtime;
 
-action::action(detail::action* pimpl)
-    : _pimpl{pimpl}
-{ }
-
-action::~action() noexcept = default;
-action::action(action&&) = default;
-action& action::operator=(action&&) = default;
-
-std::string action::type()
+void action::execute(state& state) const
 {
-    return _pimpl->type;
+    _impl->execute(state);
+}
+
+std::string action::type() const
+{
+    return _impl->type();
+}
+
+
+actions::action* action::operator->()
+{
+    return _impl.get();
+}
+actions::action const* action::operator->() const
+{
+    return _impl.get();
+}
+
+actions::action* action::operator*()
+{
+    return _impl.get();
+}
+actions::action const* action::operator*() const
+{
+    return _impl.get();
 }

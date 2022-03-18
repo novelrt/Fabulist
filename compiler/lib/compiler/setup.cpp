@@ -15,10 +15,7 @@ static lua_CFunction state_setup_actions[] = {
 
     &setup_state,
 
-    &setup_speaker,
     &setup_section,
-    &setup_options,
-
     &setup_actions,
 
     nullptr

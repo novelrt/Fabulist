@@ -1,3 +1,4 @@
+do
 speaker "narrator"
 
 section "root"
@@ -12,3 +13,4 @@ section "buyMilk"
 narrator
     "Oh no, they're all out of milk."
 jump "root"
+end

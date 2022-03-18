@@ -7,22 +7,22 @@ using namespace fabulist::runtime;
 class detail::story
 {
     public:
-        std::vector<runtime::section> sections;
+        std::unordered_map<std::string, runtime::section> sections;
 };
 
-story::story()
-    : _pimpl{new detail::story{}}
+story::story(std::unordered_map<std::string, section>&& sections)
+    : _pimpl{new detail::story{std::move(sections)}}
 { }
 story::~story() noexcept = default;
 story::story(story&&) = default;
 story& story::operator=(story&&) = default;
 
-state story::create_state(std::string)
+section const* story::get_section(std::string const& name) const noexcept
 {
-    return state{};
+    return &_pimpl->sections.at(name);
 }
 
-std::vector<section> const& story::get_sections()
+state story::create_state(state::query_callback_type query_callback,  std::string section)
 {
-    return _pimpl->sections;
+    return state{query_callback, this, &_pimpl->sections.at(section)};
 }

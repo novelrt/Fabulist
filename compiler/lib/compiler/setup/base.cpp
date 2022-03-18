@@ -1,11 +1,64 @@
+#include <cstring>
+#include <iostream>
+
 #include "common.hpp"
 
 static luaL_Reg builtins[] = {
     { "speaker", create_speaker },
     { "section", create_section },
-    { "options", create_options },
     { nullptr, nullptr }
 };
+
+void push_to_section(lua_State* L, lua_Debug* ar)
+{
+    if (ar->event == LUA_HOOKRET)
+    {
+        lua_getinfo(L, "S", ar);
+
+        int top = lua_gettop(L);
+
+        if (lua_type(L, top) == LUA_TTABLE)
+        {
+            lua_pushvalue(L, LUA_REGISTRYINDEX);
+            lua_pushliteral(L, "return");
+            lua_pushvalue(L, top);
+            lua_rawset(L, -3);
+            lua_pop(L, 1);
+        }
+        else if (strcmp(ar->what, "main") != 0)
+        {
+            lua_pushvalue(L, LUA_REGISTRYINDEX);
+            lua_pushliteral(L, "return");
+            lua_pushnil(L);
+            lua_rawset(L, -3);
+            lua_pop(L, 1);
+        }
+    }
+    else if (ar->event == LUA_HOOKLINE)
+    {
+        lua_pushvalue(L, LUA_REGISTRYINDEX);
+        lua_pushliteral(L, "return");
+        lua_rawget(L, -2);
+
+        if (!lua_isnil(L, -1))
+        {
+            lua_pushliteral(L, "current_section");
+            lua_rawget(L, -3);
+
+            size_t length = lua_rawlen(L, -1);
+
+            lua_pushvalue(L, -2);
+            lua_rawseti(L, -2, (int)length + 1);
+            lua_pop(L, 1);
+        }
+
+        lua_pop(L, 1);
+        lua_pushliteral(L, "return");
+        lua_pushnil(L);
+        lua_rawset(L, -3);
+        lua_pop(L, 1);
+    }
+}
 
 int setup_state(lua_State* L)
 {
@@ -35,6 +88,8 @@ int setup_state(lua_State* L)
     lua_rawset(L, -3); // t[k] = v
 
     lua_pop(L, 1); // -registry
+
+    lua_sethook(L, push_to_section, LUA_MASKRET | LUA_MASKLINE, 0);
 
     return 0;
 }
