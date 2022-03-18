@@ -46,7 +46,7 @@ std::unordered_map<std::string, runtime::decoder_type> const& runtime::decoders(
 story runtime::load_story(std::filesystem::path path)
 {
     std::fstream file{path};
-    return load_story(file, path.filename());
+    return load_story(file, path.filename().string());
 }
 
 story runtime::load_story(std::istream& stream, std::string name)
@@ -88,7 +88,7 @@ story runtime::load_story(std::istream& stream, std::string name)
     }
     catch(...)
     {
-        std::throw_with_nested( load_exception{"failed to load story", name} );
+        std::throw_with_nested( load_exception{"failed to load story " + name, name} );
     }
 }
 
