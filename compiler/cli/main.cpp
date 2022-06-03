@@ -66,7 +66,8 @@ int main(int argc, char const** argv)
         }
         catch (std::exception& e)
         {
-            std::cerr << e.what() << "\n";
+            std::cerr << "error parsing " << path << ":\n";
+            std::cerr << e.what();
             std::cerr << cli::error << "compilation halted.\n";
             return 1;
         }

@@ -79,8 +79,3 @@ int create_speaker(lua_State* L)
 
     return 0;
 }
-
-int setup_speaker(lua_State*)
-{
-    return 0;
-}

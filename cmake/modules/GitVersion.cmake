@@ -37,7 +37,17 @@ function(extract_git_version prefix)
     execute_process(
         COMMAND "${GIT_PROGRAM}" describe --tags "${_git_tag_sha}"
         OUTPUT_VARIABLE _git_tag
+        RESULT_VARIABLE _git_tag_success
     )
+    
+    if(NOT _git_tag_success EQUAL 0)
+        set(${prefix}_VERSION_STRING "0.0.0-unknown" PARENT_SCOPE)
+        set(${prefix}_VERSION_MAJOR 0 PARENT_SCOPE)
+        set(${prefix}_VERSION_MINOR 0 PARENT_SCOPE)
+        set(${prefix}_VERSION_PATCH 0 PARENT_SCOPE)
+        return()
+    endif()
+    
     execute_process(
         COMMAND "${GIT_PROGRAM}" rev-parse --short HEAD
         OUTPUT_VARIABLE _git_sha

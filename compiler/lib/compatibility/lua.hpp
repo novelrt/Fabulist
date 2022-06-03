@@ -41,6 +41,18 @@ int lua_load(lua_State* L, lua_Reader reader, void* data, char const* source, ch
 void luaL_setfuncs(lua_State* L, luaL_Reg const* reg, int nup);
 void lua_resume(lua_State* L, lua_State* from, int nargs);
 
+#elif LUA_VERSION_NUM == 502
+
+int lua_cpcall(lua_State* L, lua_CFunction func, void* ud);
+
+#elif LUA_VERSION_NUM == 503
+
+int lua_cpcall(lua_State* L, lua_CFunction func, void* ud);
+
+#elif LUA_VERSION_NUM == 504
+
+int lua_cpcall(lua_State* L, lua_CFunction func, void* ud);
+
 #endif
 
 #endif /* LUA_HPP */

@@ -36,7 +36,7 @@ jobs:
     continue-on-error: ${{ matrix.lua == '5.1' }}
     strategy:
       matrix:
-        os: [ windows-latest, ubuntu-latest ]
+        os: [ windows-latest, ubuntu-latest, macos-latest ]
         configuration: [ RelWithDebInfo, MinSizeRel ]
         lua: [ "5.1", "5.2", "5.3", "5.4" ]
 
