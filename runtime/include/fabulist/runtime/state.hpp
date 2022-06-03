@@ -2,8 +2,10 @@
 #define STATE_HPP
 
 #include <any>
+#include <filesystem>
 #include <functional>
 #include <memory>
+#include <ostream>
 #include <string>
 #include <vector>
 
@@ -26,8 +28,6 @@ struct state;
 class FABULIST_RUNTIME_EXPORT state
 {
     public:
-        using query_callback_type = std::function<std::string(std::vector<std::string> const&)>;
-
         struct state_update
         {
             ~state_update() noexcept = default;
@@ -52,7 +52,13 @@ class FABULIST_RUNTIME_EXPORT state
                 friend class state;
         };
 
-        explicit state(query_callback_type query_callback, story const* story, section const* section);
+        struct parameters
+        {
+            size_t version;
+            std::function<std::string(std::vector<std::string> const&)> query_callback;
+        };
+
+        explicit state(parameters const& params, story const* story, section const* section);
         ~state() noexcept;
         state(const state&) = delete;
         state& operator=(const state&) = delete;
@@ -69,6 +75,9 @@ class FABULIST_RUNTIME_EXPORT state
         std::vector<std::string>::iterator query(std::vector<std::string>& values) const;
 
         state_update update();
+
+        void save(std::filesystem::path file);
+        void save(std::ostream& stream);
 
     private:
         bool move_next();

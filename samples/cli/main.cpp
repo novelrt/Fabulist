@@ -90,7 +90,12 @@ int main(int argc, char const** argv)
     std::cerr << cli::verbose
         << "Beginning execution of story at " << section << '\n';
 
-    auto state = story.create_state(query_user, section);
+    state::parameters params{
+        sizeof(state::parameters),
+        query_user
+    };
+
+    auto state = story.create_state(params, section);
 
     while (true)
     {
@@ -130,12 +135,14 @@ std::string query_user(std::vector<std::string> const& choices)
     {
         std::cout << "> ";
         std::cin >> chosen;
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
-        if (chosen <= 0 || chosen > index)
+        if (chosen <= 0 || chosen > index || std::cin.fail())
         {
             std::cout << "Invalid choice (between 1 and " << index << ")\n";
+            std::cin.clear();
         }
+
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     }
     while (chosen <= 0 || chosen > index);
 

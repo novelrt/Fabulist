@@ -22,7 +22,7 @@ section const* story::get_section(std::string const& name) const noexcept
     return &_pimpl->sections.at(name);
 }
 
-state story::create_state(state::query_callback_type query_callback,  std::string section)
+state story::create_state(state::parameters const& parameters,  std::string section)
 {
-    return state{query_callback, this, &_pimpl->sections.at(section)};
+    return state{parameters, this, &_pimpl->sections.at(section)};
 }

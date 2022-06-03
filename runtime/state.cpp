@@ -1,4 +1,8 @@
+#include <fstream>
+#include <typeindex>
 #include <unordered_map>
+
+#include <nlohmann/json.hpp>
 
 #include <fabulist/runtime/action.hpp>
 #include <fabulist/runtime/section.hpp>
@@ -12,12 +16,32 @@ struct detail::state
     size_t action_index;
     runtime::section const* current_section;
     runtime::story const* story;
-    ::state::query_callback_type query_callback;
+    ::state::parameters state_parameters;
     std::unordered_map<std::string, std::any> variables;
 };
 
-state::state(query_callback_type query_callback, class story const* story, class section const* section)
-    : _pimpl{new detail::state{0, section, story, query_callback, {}}}
+template <typename T>
+size_t get_version(T state::parameters::*field)
+{
+    state::parameters tmp{};
+    return size_t(ptrdiff_t(&(tmp.*field)) - ptrdiff_t(&tmp)) + sizeof(T);
+}
+
+state::parameters validate(state::parameters const& params)
+{
+    if (params.version <= get_version(&state::parameters::version))
+        throw std::runtime_error{"params.version too small"};
+
+    state::parameters result{};
+
+    if (params.version >= get_version(&state::parameters::query_callback))
+        result.query_callback = params.query_callback;
+
+    return result;
+}
+
+state::state(parameters const& params, class story const* story, class section const* section)
+    : _pimpl{new detail::state{0, section, story, validate(params), {}}}
 { }
 
 state::~state() noexcept = default;
@@ -51,12 +75,75 @@ std::vector<std::string>::iterator state::query(
     std::vector<std::string>& options) const
 {
     return std::find(options.begin(), options.end(),
-        _pimpl->query_callback(options));
+        _pimpl->state_parameters.query_callback(options));
 }
 
 state::state_update state::update()
 {
     return state::state_update{this};
+}
+
+void state::save(std::filesystem::path path)
+{
+    std::ofstream file{path};
+
+    save(file);
+}
+
+template <typename T, typename Callable>
+auto make_encoder(Callable const& callable)
+    -> std::pair<const std::type_index, std::function<nlohmann::json(std::any const&)>>
+{
+    return {
+        std::type_index(typeid(T)),
+        [callable](std::any const& any)
+        {
+            if constexpr (std::is_void_v<T>)
+                return callable();
+            else
+                return callable(std::any_cast<T const&>(any));
+        }
+    };
+}
+
+static std::unordered_map<std::type_index, std::function<nlohmann::json(std::any const&)>> encoders
+{
+    // nil
+    make_encoder<void>([]{ return nullptr; }),
+    // "string"
+    make_encoder<std::string>([](std::string const& str){ return str; }),
+    // TODO: lua_Number
+    make_encoder<double>([](double d) { return d; }),
+    // TODO: integers
+    make_encoder<bool>([](bool b){ return b; })
+};
+
+void state::save(std::ostream& stream)
+{
+    nlohmann::json result = nlohmann::json::object();
+
+    //result["story"] = _pimpl->story;
+    if (_pimpl->current_section)
+    {
+        result["section"] = _pimpl->current_section->name();
+        result["action"] = _pimpl->action_index;
+    }
+
+    result["variables"] = nlohmann::json::object();
+
+    for (auto const& pair : _pimpl->variables)
+    {
+        if (auto const it = encoders.find(std::type_index(pair.second.type()));
+            it != encoders.cend())
+            result["variables"][pair.first] = it->second(pair.second);
+        else
+            // if we get here something horribly wrong has happened
+            // as the code which sets values should never allow anything outside
+            // of these values to work
+            throw std::logic_error{"unknown type to encode"};
+    }
+
+    stream << result;
 }
 
 state::state_update::operator bool() const noexcept

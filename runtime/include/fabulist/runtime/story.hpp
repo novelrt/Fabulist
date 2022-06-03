@@ -34,7 +34,7 @@ class FABULIST_RUNTIME_EXPORT story
 
         section const* get_section(std::string const& name) const noexcept;
 
-        state create_state(state::query_callback_type query_callback, std::string section);
+        state create_state(state::parameters const& parameters, std::string section);
 
     private:
         std::unique_ptr<detail::story> _pimpl;
