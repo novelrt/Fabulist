@@ -19,6 +19,7 @@ add_library(compiler
     compiler/setup.cpp
 
     compiler/setup/actions.cpp
+    compiler/setup/actions/call.cpp
     compiler/setup/actions/jump.cpp
     compiler/setup/actions/options.cpp
 

@@ -4,6 +4,7 @@
 #include "common.hpp"
 
 #define ACTIONS \
+ACTION(call) \
 ACTION(jump) \
 ACTION(options)
 

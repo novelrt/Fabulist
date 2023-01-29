@@ -12,5 +12,6 @@ options
 section "buyMilk"
 narrator
     "Oh no, they're all out of milk."
+call "increment" { "attempts" }
 jump "root"
 end
