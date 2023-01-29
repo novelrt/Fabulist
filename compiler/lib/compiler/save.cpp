@@ -71,7 +71,7 @@ nlohmann::json table_to_json(lua_State* L)
     nlohmann::json result = std::accumulate(
         values.begin(), values.end(),
         nlohmann::json{},
-        [is_array](nlohmann::json& result,
+        [is_array](nlohmann::json result,
             decltype(values)::const_reference value)
         {
             if (is_array)

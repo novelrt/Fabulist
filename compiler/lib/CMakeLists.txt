@@ -3,6 +3,9 @@ include(GitVersion)
 
 add_library(compiler
     $<$<AND:$<VERSION_GREATER_EQUAL:${FABULIST_LUA_VERSION},5.1>,$<VERSION_LESS:${FABULIST_LUA_VERSION},5.2>>:compatibility/lua5.1.cpp>
+    $<$<AND:$<VERSION_GREATER_EQUAL:${FABULIST_LUA_VERSION},5.2>,$<VERSION_LESS:${FABULIST_LUA_VERSION},5.3>>:compatibility/lua5.2.cpp>
+    $<$<AND:$<VERSION_GREATER_EQUAL:${FABULIST_LUA_VERSION},5.3>,$<VERSION_LESS:${FABULIST_LUA_VERSION},5.4>>:compatibility/lua5.3.cpp>
+    $<$<AND:$<VERSION_GREATER_EQUAL:${FABULIST_LUA_VERSION},5.4>,$<VERSION_LESS:${FABULIST_LUA_VERSION},5.5>>:compatibility/lua5.4.cpp>
 
     compiler/convenience.cpp
 
@@ -16,10 +19,11 @@ add_library(compiler
     compiler/setup.cpp
 
     compiler/setup/actions.cpp
+    compiler/setup/actions/call.cpp
     compiler/setup/actions/jump.cpp
+    compiler/setup/actions/options.cpp
 
     compiler/setup/base.cpp
-    compiler/setup/options.cpp
     compiler/setup/section.cpp
     compiler/setup/speaker.cpp
 

@@ -20,7 +20,7 @@ void set_program_name(std::string program_name);
 struct parsed_arguments
 {
     std::vector<std::string> input_files;
-    std::optional<std::string> output_file;
+    std::optional<std::string> section;
     bool enable_verbose;
     bool show_usage;
     bool show_version;

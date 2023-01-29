@@ -14,6 +14,7 @@ using namespace fabulist::compiler;
 
 struct reader {
     std::istream& stream;
+    std::string name;
     std::array<char, 1024> buffer;
 };
 
@@ -68,15 +69,42 @@ int error_handler(lua_State* L)
     return 1;
 }
 
+int parse_main(lua_State* L)
+{
+    void* data = lua_touserdata(L, 1);
+    auto* reader = static_cast<struct reader*>(data);
+
+    lua_pushcclosure(L, error_handler, 0);
+
+    if (lua_load(L, read_func, reader, reader->name.c_str(), "t"))
+    {
+        error_handler(L);
+        lua_error(L);
+    }
+    else if (lua_pcall(L, 0, 0, -2))
+    {
+        lua_error(L);
+    }
+
+    lua_pushvalue(L, LUA_REGISTRYINDEX);
+    lua_pushliteral(L, "return");
+    lua_rawget(L, -2);
+
+    if (!lua_isnil(L, -1))
+    {
+        lua_pushliteral(L, "detected that an action may be missed from a section");
+        error_handler(L);
+        lua_error(L);
+    }
+
+    return 0;
+}
+
 void compiler::parse(std::istream& stream, std::string name)
 {
-    reader reader{stream, {}};
+    reader reader{stream, name, {}};
 
-    lua_pushcclosure(_pimpl->state, error_handler, 0);
-
-    int status = lua_load(_pimpl->state, read_func, &reader, name.c_str(), "t");
-    if (status) error_handler(_pimpl->state);
-    else status = lua_pcall(_pimpl->state, 0, 0, -2);
+    int status = lua_cpcall(_pimpl->state, parse_main, &reader);
 
     if (status)
     {

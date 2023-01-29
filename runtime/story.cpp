@@ -1,37 +1,35 @@
-#include <string>
+#include <fabulist/runtime/action.hpp>
+#include <fabulist/runtime/runtime.hpp>
+#include <fabulist/runtime/section.hpp>
+#include <fabulist/runtime/state.hpp>
+#include <fabulist/runtime/story.hpp>
 
-#include <fabulist/speaker.hpp>
-#include <fabulist/story.hpp>
+using namespace fabulist::runtime;
 
-#include <sol/sol.hpp>
+struct detail::story
+{
+    ::runtime const* runtime;
+    std::unordered_map<std::string, ::section> sections;
+};
 
-#include <story_impl.hpp>
-
-using namespace fabulist;
-
-story::story()
-    : _impl(std::make_unique<detail::story_impl>(this))
+story::story(runtime const* runtime, std::unordered_map<std::string, section>&& sections)
+    : _pimpl{new detail::story{runtime, std::move(sections)}}
 { }
-
 story::~story() noexcept = default;
 story::story(story&&) = default;
 story& story::operator=(story&&) = default;
 
-speaker const* story::add_speaker(std::string name)
+runtime const* story::get_runtime() const noexcept
 {
-    auto [spk, succ] = _impl->speakers.emplace(name, std::make_unique<speaker>(name));
-
-    return spk->second.get();
+    return _pimpl->runtime;
 }
 
-speaker const* story::get_speaker(std::string name)
+section const* story::get_section(std::string const& name) const noexcept
 {
-    auto it = _impl->speakers.find(name);
+    return &_pimpl->sections.at(name);
+}
 
-    if (it != _impl->speakers.end())
-    {
-        return it->second.get();
-    }
-
-    return nullptr;
+state story::create_state(state::parameters const& parameters,  std::string section)
+{
+    return state{parameters, this, &_pimpl->sections.at(section)};
 }

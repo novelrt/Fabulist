@@ -4,7 +4,9 @@
 #include "common.hpp"
 
 #define ACTIONS \
-ACTION(jump)
+ACTION(call) \
+ACTION(jump) \
+ACTION(options)
 
 enum class action
 {

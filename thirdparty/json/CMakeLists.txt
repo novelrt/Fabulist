@@ -29,8 +29,7 @@ target_include_directories(nlohmann_json::nlohmann_json
 
 target_compile_options(nlohmann_json::nlohmann_json
     INTERFACE
-        $<$<CXX_COMPILER_ID:MSVC>:/experimental:external>
-        $<$<CXX_COMPILER_ID:MSVC>:/external:I$<BUILD_INTERFACE:${json_SOURCE_DIR}/include>>
+        $<BUILD_INTERFACE:$<$<CXX_COMPILER_ID:MSVC>:/external:I${json_SOURCE_DIR}/include>>
         $<$<CXX_COMPILER_ID:MSVC>:/external:W0>
         $<$<CXX_COMPILER_ID:MSVC>:/external:templates->
 )

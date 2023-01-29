@@ -114,8 +114,7 @@ target_compile_definitions(lua
 
 target_compile_options(lua
     INTERFACE
-        $<$<CXX_COMPILER_ID:MSVC>:/experimental:external>
-        $<$<CXX_COMPILER_ID:MSVC>:/external:I$<BUILD_INTERFACE:${lua_SOURCE_DIR}/src>>
+        $<BUILD_INTERFACE:$<$<CXX_COMPILER_ID:MSVC>:/external:I${lua_SOURCE_DIR}/src>>
         $<$<CXX_COMPILER_ID:MSVC>:/external:W0>
         $<$<CXX_COMPILER_ID:MSVC>:/external:templates->
     PRIVATE
@@ -146,6 +145,9 @@ target_compile_options(lua
         $<$<CXX_COMPILER_ID:MSVC>:/wd5045> # compiler will insert spectre mitigation for memory load
         $<$<CXX_COMPILER_ID:MSVC>:/wd4334> # result of 32-bit shift implicitly converted to 64-bits
         $<$<CXX_COMPILER_ID:MSVC>:/wd4774> # format string expected in argument 2 is not a string literal
+
+        $<$<CXX_COMPILER_ID:AppleClang>:-Wno-deprecated-declarations> # 'a' is deprecated
+        $<$<CXX_COMPILER_ID:AppleClang>:-Wno-string-plus-int> # adding 'a' to a string does not append to the string
 )
 
 install(
