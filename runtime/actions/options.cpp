@@ -37,9 +37,13 @@ void options::execute(state& state) const
             return option.name;
         });
 
-    auto it = std::next(begin(),
-        std::distance(options.begin(), state.query(options)));
+    // query() returns cend() if the user did not select an option
+    auto selected = state.query(options);
+    if (selected == options.cend())
+        return;
 
+    // Translate the valid iterator to the correct set of actions to take.
+    auto it = std::next(begin(), std::distance(options.cbegin(), selected));
     for (auto const& action : it->actions)
     {
         action.execute(state);

@@ -55,7 +55,7 @@ class FABULIST_RUNTIME_EXPORT state
         struct parameters
         {
             size_t version;
-            std::function<std::string(std::vector<std::string> const&)> query_callback;
+            std::function<std::vector<std::string>::const_iterator(std::vector<std::string> const&)> query_callback;
         };
 
         explicit state(parameters const& params, story const* story, section const* section);
@@ -72,7 +72,7 @@ class FABULIST_RUNTIME_EXPORT state
         section const* get_section() const noexcept;
 
         void jump_to_section(std::string const& section);
-        std::vector<std::string>::iterator query(std::vector<std::string>& values) const;
+        std::vector<std::string>::const_iterator query(std::vector<std::string> const& values) const;
 
         state_update update();
 

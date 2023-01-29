@@ -71,11 +71,10 @@ void state::jump_to_section(std::string const& section)
     _pimpl->action_index = 0;
 }
 
-std::vector<std::string>::iterator state::query(
-    std::vector<std::string>& options) const
+std::vector<std::string>::const_iterator state::query(
+    std::vector<std::string> const& options) const
 {
-    return std::find(options.begin(), options.end(),
-        _pimpl->state_parameters.query_callback(options));
+    return _pimpl->state_parameters.query_callback(options);
 }
 
 state::state_update state::update()

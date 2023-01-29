@@ -39,7 +39,7 @@ wrap_optional_t<T> get_member(std::optional<cli::parsed_arguments> arguments,
     return arguments.value().*member;
 }
 
-std::string query_user(std::vector<std::string> const& choices);
+std::vector<std::string>::const_iterator query_user(std::vector<std::string> const& choices);
 
 int main(int argc, char const** argv)
 {
@@ -121,7 +121,7 @@ int main(int argc, char const** argv)
     return 0;
 }
 
-std::string query_user(std::vector<std::string> const& choices)
+std::vector<std::string>::const_iterator query_user(std::vector<std::string> const& choices)
 {
     std::cerr << cli::verbose << "Querying user between " << choices.size() << " options\n";
     size_t index = 0;
@@ -148,5 +148,5 @@ std::string query_user(std::vector<std::string> const& choices)
 
     std::cerr << cli::verbose << "Selected option " << chosen << '\n';
 
-    return choices.at(chosen - 1);
+    return std::next(choices.begin(), chosen - 1);
 }
