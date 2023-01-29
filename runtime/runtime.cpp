@@ -13,6 +13,7 @@
 #include <fabulist/runtime/state.hpp>
 #include <fabulist/runtime/story.hpp>
 
+#include <fabulist/runtime/actions/call.hpp>
 #include <fabulist/runtime/actions/jump.hpp>
 #include <fabulist/runtime/actions/line.hpp>
 #include <fabulist/runtime/actions/options.hpp>
@@ -24,6 +25,7 @@ using namespace fabulist::runtime;
 struct detail::runtime
 {
     std::unordered_map<std::string, fabulist::runtime::runtime::decoder_type> decoders;
+    std::unordered_map<std::string, fabulist::runtime::runtime::method_type> methods;
 };
 
 runtime::runtime()
@@ -38,9 +40,19 @@ void runtime::register_action(std::string const& type, decoder_type decoder)
     _pimpl->decoders[type] = decoder;
 }
 
+void runtime::register_method(std::string const& type, method_type implementation)
+{
+    _pimpl->methods[type] = implementation;
+}
+
 std::unordered_map<std::string, runtime::decoder_type> const& runtime::decoders() const noexcept
 {
     return _pimpl->decoders;
+}
+
+std::unordered_map<std::string, runtime::method_type> const& runtime::methods() const noexcept
+{
+    return _pimpl->methods;
 }
 
 story runtime::load_story(std::filesystem::path path)
@@ -84,7 +96,7 @@ story runtime::load_story(std::istream& stream, std::string name)
             sections.emplace(key, parse_section(key, value));
         }
 
-        return story{std::move(sections)};
+        return story{this, std::move(sections)};
     }
     catch(...)
     {
@@ -97,4 +109,5 @@ void fabulist::runtime::register_default_actions(runtime& runtime)
     runtime.register_action<actions::line>("line");
     runtime.register_action<actions::options>("options");
     runtime.register_action<actions::jump>("jump");
+    runtime.register_action<actions::call>("call");
 }

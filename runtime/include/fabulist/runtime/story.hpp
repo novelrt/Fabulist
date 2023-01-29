@@ -12,25 +12,28 @@
 namespace fabulist::runtime
 {
 
+class runtime;
 class section;
 class state;
 
 namespace detail
 {
 
-class story;
+struct story;
 
 }
 
 class FABULIST_RUNTIME_EXPORT story
 {
     public:
-        explicit story(std::unordered_map<std::string, section>&& sections);
+        explicit story(runtime const* runtime, std::unordered_map<std::string, section>&& sections);
         ~story() noexcept;
         story(const story&) = delete;
         story& operator=(const story&) = delete;
         story(story&&);
         story& operator=(story&&);
+
+        runtime const* get_runtime() const noexcept;
 
         section const* get_section(std::string const& name) const noexcept;
 

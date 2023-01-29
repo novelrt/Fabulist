@@ -3,6 +3,7 @@ include(GitVersion)
 
 add_library(runtime
     action.cpp
+    actions/call.cpp
     actions/jump.cpp
     actions/line.cpp
     actions/options.cpp

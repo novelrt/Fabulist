@@ -1,21 +1,28 @@
+#include <fabulist/runtime/action.hpp>
+#include <fabulist/runtime/runtime.hpp>
 #include <fabulist/runtime/section.hpp>
 #include <fabulist/runtime/state.hpp>
 #include <fabulist/runtime/story.hpp>
 
 using namespace fabulist::runtime;
 
-class detail::story
+struct detail::story
 {
-    public:
-        std::unordered_map<std::string, runtime::section> sections;
+    ::runtime const* runtime;
+    std::unordered_map<std::string, ::section> sections;
 };
 
-story::story(std::unordered_map<std::string, section>&& sections)
-    : _pimpl{new detail::story{std::move(sections)}}
+story::story(runtime const* runtime, std::unordered_map<std::string, section>&& sections)
+    : _pimpl{new detail::story{runtime, std::move(sections)}}
 { }
 story::~story() noexcept = default;
 story::story(story&&) = default;
 story& story::operator=(story&&) = default;
+
+runtime const* story::get_runtime() const noexcept
+{
+    return _pimpl->runtime;
+}
 
 section const* story::get_section(std::string const& name) const noexcept
 {

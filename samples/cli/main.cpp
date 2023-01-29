@@ -40,6 +40,7 @@ wrap_optional_t<T> get_member(std::optional<cli::parsed_arguments> arguments,
 }
 
 std::vector<std::string>::const_iterator query_user(std::vector<std::string> const& choices);
+void increment(std::vector<std::string> parameters);
 
 int main(int argc, char const** argv)
 {
@@ -62,6 +63,7 @@ int main(int argc, char const** argv)
 
     runtime runtime{};
     register_default_actions(runtime);
+    runtime.register_method("increment", increment);
 
     auto input_file = get_member(args, &cli::parsed_arguments::input_files)
         .value_or(std::vector<std::string>{})
@@ -121,16 +123,21 @@ int main(int argc, char const** argv)
     return 0;
 }
 
+void increment(std::vector<std::string> parameters)
+{
+    std::cout << "Incrementing " << parameters[0] << " by 1\n";
+}
+
 std::vector<std::string>::const_iterator query_user(std::vector<std::string> const& choices)
 {
     std::cerr << cli::verbose << "Querying user between " << choices.size() << " options\n";
-    size_t index = 0;
+    std::vector<std::string>::difference_type index = 0;
     for (auto const& option : choices)
     {
         std::cout << ++index << ". " << option << '\n';
     }
 
-    size_t chosen = 0;
+    std::vector<std::string>::difference_type chosen = 0;
     do
     {
         std::cout << "> ";

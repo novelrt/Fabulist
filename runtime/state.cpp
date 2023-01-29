@@ -14,8 +14,8 @@ using namespace fabulist::runtime;
 struct detail::state
 {
     size_t action_index;
-    runtime::section const* current_section;
-    runtime::story const* story;
+    ::section const* current_section;
+    ::story const* story;
     ::state::parameters state_parameters;
     std::unordered_map<std::string, std::any> variables;
 };

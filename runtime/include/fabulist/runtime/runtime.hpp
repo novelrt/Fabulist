@@ -37,6 +37,7 @@ class FABULIST_RUNTIME_EXPORT runtime
 
     public:
         using decoder_type = std::function<action(decoder_ctx const&)>;
+        using method_type = std::function<void(std::vector<std::string>)>;
 
         explicit runtime();
         ~runtime() noexcept;
@@ -53,7 +54,9 @@ class FABULIST_RUNTIME_EXPORT runtime
         }
 
         void register_action(std::string const& type, decoder_type decoder);
+        void register_method(std::string const& name, method_type implementation);
         std::unordered_map<std::string, decoder_type> const& decoders() const noexcept;
+        std::unordered_map<std::string, method_type> const& methods() const noexcept;
 
         story load_story(std::filesystem::path path);
         story load_story(std::istream& stream, std::string name);
